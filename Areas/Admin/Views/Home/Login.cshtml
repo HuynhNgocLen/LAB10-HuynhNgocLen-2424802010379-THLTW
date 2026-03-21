@@ -1,0 +1,48 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin</title>
+    @Styles.Render("~/Content/Admin/css")
+</head>
+<body>
+    <div class="lp-card">
+        <div class="lp-logo">
+            <div class="lp-icon">
+                <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0110 0v4" /></svg>
+            </div>
+            <h2>LOGIN ADMIN</h2>
+            <p>SachOnline Management</p>
+        </div>
+
+        @if (ViewBag.ThongBao != null)
+        {
+            <div class="lp-err">⚠ @ViewBag.ThongBao</div>
+        }
+
+        <form action="~/Admin/Home/Login" method="post">
+            <div class="lp-field">
+                <input type="text" id="UserName" name="UserName" placeholder=" " required autocomplete="off">
+                <label for="UserName">Tên đăng nhập</label>
+            </div>
+            <div class="lp-field">
+                <input type="password" id="Password" name="Password" placeholder=" " required>
+                <label for="Password">Mật khẩu</label>
+            </div>
+            <div class="lp-opts">
+                <label><input type="checkbox" name="remember"> Ghi nhớ đăng nhập</label>
+                <a href="#">Quên mật khẩu?</a>
+            </div>
+            <button type="submit" class="lp-btn">Đăng nhập</button>
+        </form>
+
+        <div class="lp-back">
+            <a href="@Url.Action("Index","SachOnline")">← Quay về trang chủ</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewBag.Title - SachOnline</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="~/Content/Site.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .imgbook {
+            transition: all 1s ease-in;
+            width: 400px;
+        }
+
+            .imgbook:hover {
+                transform: scale(0.9);
+                cursor: pointer;
+            }
+
+        .imgsachbannhieu {
+            width: 100px;
+        }
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    @Html.Action("NavPartial", "SachOnline")
+
+    <div class="container">
+        @Html.Action("SliderPartial", "SachOnline")
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                @Html.Action("ChuDePartial", "SachOnline")
+                <br>
+                @Html.Action("NhaXuatBanPartial", "SachOnline")
+            </div>
+
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                @RenderBody()
+            </div>
+        </div>
+
+        <hr>
+
+        @RenderSection("SachBanNhieu", required: false)
+
+    </div>
+
+    @Html.Action("FooterPartial", "SachOnline")
+
+</body>
+</html>

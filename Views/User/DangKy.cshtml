@@ -1,0 +1,71 @@
+@model HuynhNgocLen.SachOnline.Models.KHACHHANG
+@{
+    ViewBag.Title = "Đăng ký";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+<h2 class="text-center">DANG KY</h2>
+<div style="color:red; text-align:center">@ViewBag.ThongBao</div>
+
+<table align="center">
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        <tr style="height:40px">
+            <td>Ho ten:</td>
+            <td>
+                <input type="text" name="HoTen" value="@Request.Form["HoTen"]" />
+                <span style="color:red">@ViewData["err1"]</span>
+            </td>
+        </tr>
+        <tr style="height:40px">
+            <td>Ten dang nhap:</td>
+            <td>
+                <input type="text" name="TenDN" value="@Request.Form["TenDN"]" />
+                <span style="color:red">@ViewData["err2"]</span>
+            </td>
+        </tr>
+        <tr style="height:40px">
+            <td>Mat Khau:</td>
+            <td>
+                <input type="password" name="MatKhau" />
+                <span style="color:red">@ViewData["err3"]</span>
+            </td>
+        </tr>
+        <tr style="height:40px">
+            <td>Nhap lai mat khau:</td>
+            <td>
+                <input type="password" name="MatKhauNL" />
+                <span style="color:red">@ViewData["err4"]</span>
+            </td>
+        </tr>
+        <tr style="height:40px">
+            <td>Email:</td>
+            <td>
+                <input type="email" name="Email" value="@Request.Form["Email"]" />
+                <span style="color:red">@ViewData["err5"]</span>
+            </td>
+        </tr>
+        <tr style="height:40px">
+            <td>Dien thoai:</td>
+            <td>
+                <input type="text" name="DienThoai" value="@Request.Form["DienThoai"]" />
+                <span style="color:red">@ViewData["err6"]</span>
+            </td>
+        </tr>
+        <tr style="height:40px">
+            <td>Dia chi:</td>
+            <td><input type="text" name="DiaChi" value="@Request.Form["DiaChi"]" /></td>
+        </tr>
+        <tr style="height:40px">
+            <td>Ngay sinh:</td>
+            <td><input type="date" name="NgaySinh" value="@Request.Form["NgaySinh"]" /></td>
+        </tr>
+        <tr style="height:40px">
+            <td></td>
+            <td>
+                <input type="submit" value="Dang ky" class="btn btn-secondary border-dark" />
+                <input type="reset" value="Xoa noi dung" class="btn btn-secondary border-dark" />
+            </td>
+        </tr>
+    }
+</table>

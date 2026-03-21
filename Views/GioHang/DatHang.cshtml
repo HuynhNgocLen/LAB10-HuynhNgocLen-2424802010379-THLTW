@@ -1,0 +1,84 @@
+﻿@using HuynhNgocLen.SachOnline.Models
+@model IEnumerable<HuynhNgocLen.SachOnline.Models.GioHang>
+
+@{
+    ViewBag.Title = "ĐƠN ĐẶT HÀNG";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<h2 style="text-align:center; margin-top: 20px;">THÔNG TIN ĐƠN HÀNG</h2>
+<table align="center" border="1" style="width:80%; border-collapse: collapse;">
+    <tr style="text-align:center; font-weight:bold; background-color: #f2f2f2;">
+        <td>Mã Sách</td>
+        <td>Tên Sách</td>
+        <td>Ảnh Bìa</td>
+        <td>Số Lượng</td>
+        <td>Đơn Giá</td>
+        <td>Thành Tiền</td>
+    </tr>
+    @foreach (var item in Model)
+    {
+        <tr style="text-align:center;">
+            <td>@item.iMaSach</td>
+            <td style="text-align:left; padding-left: 10px;">@item.sTenSach</td>
+            <td><img src="~/Images/@item.sAnhBia" style="width:80px; padding: 5px;"></td>
+            <td>@item.iSoLuong</td>
+            <td>@string.Format("{0:#,##0}", item.dDonGia) đ</td>
+            <td>@string.Format("{0:#,##0}", item.dThanhTien) đ</td>
+        </tr>
+    }
+    <tr style="font-weight:bold; color:red;">
+        <td colspan="3" style="text-align:right; padding-right:10px;">
+            Số lượng sách: @ViewBag.TongSoLuong
+        </td>
+        <td colspan="3" style="text-align:center;">
+            Tổng tiền: @string.Format("{0:#,##0}", ViewBag.TongTien) VNĐ
+        </td>
+    </tr>
+    <tr style="font-weight:bold; text-align:right;">
+        <td colspan="6" style="padding: 10px;">
+            @Html.ActionLink("TRỞ VỀ GIỎ HÀNG", "GioHang", "GioHang", null, new { @class = "btn btn-default" })
+        </td>
+    </tr>
+</table>
+
+<hr />
+
+<h2 style="text-align:center">THÔNG TIN ĐẶT HÀNG</h2>
+@{
+    KHACHHANG kh = (KHACHHANG)Session["TaiKhoan"];
+}
+<table align="center" style="width: 50%;">
+    @using (Html.BeginForm())
+    {
+        @Html.ValidationSummary(true)
+        <tr style="height:40px;">
+            <td>Họ tên khách hàng:</td>
+            <td style="font-weight:bold">@kh.HoTen</td>
+        </tr>
+        <tr style="height:40px;">
+            <td>Địa chỉ:</td>
+            <td style="font-weight:bold">@kh.DiaChi</td>
+        </tr>
+        <tr style="height:40px;">
+            <td>Điện thoại:</td>
+            <td style="font-weight:bold">@kh.DienThoai</td>
+        </tr>
+        <tr style="height:40px;">
+            <td>Ngày đặt:</td>
+            <td style="font-weight:bold">@DateTime.Now.ToString("dd/MM/yyyy")</td>
+        </tr>
+        <tr style="height:40px;">
+            <td>Ngày giao:</td>
+            <td>
+                <input type="date" name="NgayGiao" class="form-control" required />
+            </td>
+        </tr>
+        <tr style="height:50px;">
+            <td></td>
+            <td>
+                <input type="submit" value="XÁC NHẬN ĐẶT HÀNG" class="btn btn-primary" style="background-color: orange; border: none; padding: 10px 20px; color: white; cursor: pointer; font-weight: bold;" />
+            </td>
+        </tr>
+    }
+</table>

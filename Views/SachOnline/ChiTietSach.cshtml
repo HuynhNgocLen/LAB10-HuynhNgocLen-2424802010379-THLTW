@@ -1,0 +1,47 @@
+﻿@model HuynhNgocLen.SachOnline.Models.SACH
+
+@{
+    ViewBag.Title = "CHI TIẾT SÁCH";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<h2 class="text-center">THÔNG TIN CHI TIẾT SÁCH</h2>
+<hr />
+
+<div class="row">
+    @* Cột hiển thị hình ảnh *@
+    <div class="col-md-4">
+        <img src="~/Images/@Model.AnhBia" class="img-responsive img-thumbnail" style="width:100%" />
+    </div>
+
+    @* Cột hiển thị thông tin chi tiết *@
+    <div class="col-md-8">
+        <h3><strong>@Model.TenSach</strong></h3>
+        <br />
+        @* Định dạng Ngày cập nhật: dd/MM/yyyy *@
+        <p><strong>Ngày cập nhật:</strong> @Html.FormatValue(Model.NgayCapNhat, "{0:dd/MM/yyyy}")</p>
+
+        @* Định dạng Đơn giá: #,##0 *@
+        <p>
+            <strong>Giá bán:</strong>
+            <span style="color:red; font-weight:bold; font-size:18px">
+                @Html.FormatValue(Model.GiaBan, "{0:#,##0}") VNĐ
+            </span>
+        </p>
+
+        <hr />
+        <h4><strong>MÔ TẢ SÁCH:</strong></h4>
+        <div style="text-align:justify">
+            @* Định dạng xuống dòng: Thay \n bằng <br> và dùng Html.Raw *@
+            @Html.Raw(Model.MoTa.ToString().Replace("\n", "<br>"))
+        </div>
+
+        <hr />
+        <p>
+            <a href="@Url.Action("Index", "SachOnline")" class="btn btn-default">Quay lại trang chủ</a>
+            <a href="@Url.Action("ThemGioHang", "GioHang", new { ms = Model.MaSach, url = Request.Url.ToString() })" class="btn btn-primary">
+                <span class="glyphicon glyphicon-shopping-cart"></span> Thêm vào giỏ hàng
+            </a>
+        </p>
+    </div>
+</div>

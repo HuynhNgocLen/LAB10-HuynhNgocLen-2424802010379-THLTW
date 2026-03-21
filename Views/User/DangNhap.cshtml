@@ -1,0 +1,50 @@
+﻿@model HuynhNgocLen.SachOnline.Models.KHACHHANG
+@{
+    ViewBag.Title = "Đăng nhập";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<h2 class="text-center text-primary mb-4">ĐĂNG NHẬP</h2>
+
+@if (ViewBag.ThongBao != null)
+{
+    <h4 style="color:red; text-align:center"><strong>@ViewBag.ThongBao</strong></h4>
+}
+
+<table align="center">
+    @using (Html.BeginForm("DangNhap", "User",
+    new { url = ViewBag.Url }, FormMethod.Post))
+    {
+        @Html.ValidationSummary(true)
+
+        <tr style="height:40px">
+            <td class="fw-bold">Tên đăng nhập:</td>
+            <td>
+                @Html.TextBox("TenDN", null, new { @class = "form-control", @placeholder = "Nhập tên đăng nhập" })
+                <span class="text-danger small italic">@ViewData["Err1"]</span>
+            </td>
+        </tr>
+
+        <tr style="height:40px">
+            <td class="fw-bold">Mật khẩu:</td>
+            <td>
+                @Html.Password("MatKhau", null, new { @class = "form-control", @placeholder = "Nhập mật khẩu" })
+                <span class="text-danger small italic">@ViewData["Err2"]</span>
+            </td>
+        </tr>
+
+        <tr style="height:60px">
+            <td></td>
+            <td>
+                <button type="submit" class="btn btn-primary btn-lg">Đăng nhập</button>
+            </td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td>
+                <a href="@Url.Action("DangKy", "User")" class="text-decoration-none">Chưa có tài khoản? Đăng ký ngay</a>
+            </td>
+        </tr>
+    }
+</table>

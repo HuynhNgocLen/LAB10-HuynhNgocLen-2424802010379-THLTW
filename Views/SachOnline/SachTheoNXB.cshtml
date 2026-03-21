@@ -1,0 +1,77 @@
+﻿@using HuynhNgocLen.SachOnline.Models
+@using PagedList.Mvc;
+
+@model PagedList.PagedList<SACH>
+
+@{
+    ViewBag.Title = "SÁCH THEO NXB";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<style type="text/css">
+    .imgbook {
+        transition: all 0.5s ease-in;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+    }
+
+        .imgbook:hover {
+            transform: scale(0.9);
+            cursor: pointer;
+        }
+</style>
+
+<h2 class="text-center">SÁCH THEO NXB</h2>
+<hr>
+
+<div class="row text-center">
+    @if (Model != null && Model.Any())
+    {
+        foreach (var sach in Model)
+        {
+            <div class="col-sm-4 col-md-4 col-lg-4 col-xs-6">
+                <div class="thumbnail">
+                    <a href="@Url.Action("ChiTietSach", "SachOnline", new { id = sach.MaSach })">
+                        <img src="~/Images/@sach.AnhBia" alt="@sach.TenSach" class="img-responsive img-rounded imgbook">
+                    </a>
+                    <div class="caption">
+                        <h4 style="min-height:70px;">
+                            <a href="@Url.Action("ChiTietSach", "SachOnline", new { id = sach.MaSach })">@sach.TenSach</a>
+                        </h4>
+                        <p>Giá: <span style="color:red; font-weight:bold">@String.Format("{0:0,0}", sach.GiaBan) VNĐ</span></p>
+
+                        <p>
+                            <a href="@Url.Action("ThemGioHang","GioHang", new { ms = sach.MaSach, url = Request.Url.ToString() })" class="btn btn-primary" role="button">
+                                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Add to Cart
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info">Hiện chưa có sách nào thuộc chủ đề này.</div>
+    }
+</div>
+<div class="MenuTrang">
+    Trang@(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+    @Html.PagedListPager(Model, page => Url.Action("SachTheoNXB", new
+    {
+        id = ViewBag.MaNXB,
+        page = page
+}))
+</div>
+
+<style>
+    .MenuTrang {
+        display: inline;
+        text-align: center;
+    }
+</style>
+
+@section SachBanNhieu{
+    @Html.Action("SachBanNhieuPartial", "SachOnline")
+}

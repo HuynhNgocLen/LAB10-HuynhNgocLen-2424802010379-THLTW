@@ -1,0 +1,11 @@
+﻿@model IEnumerable<HuynhNgocLen.SachOnline.Models.CHUDE>
+
+<div class="list-group">
+    <a href="#" class="list-group-item active">DANH MỤC CHỦ ĐỀ</a>
+    @foreach (var cd in Model)
+    {
+        <a href="@Url.Action("SachTheoChuDe", "SachOnline", new { id = cd.MaCD })" class="list-group-item">
+            @cd.TenChuDe
+        </a>
+    }
+</div>

@@ -1,0 +1,18 @@
+﻿@model IEnumerable<HuynhNgocLen.SachOnline.Models.SACH>
+
+<h2 class="text-center">SÁCH BÁN NHIỀU</h2>
+<hr>
+<div class="row text-center">
+    @foreach (var sach in Model)
+    {
+        <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
+            <div class="thumbnail" style="height: 350px; margin-bottom: 20px;">
+                <img src="~/Images/@sach.AnhBia" style="height:200px; width:auto; max-width:100%; object-fit:cover;">
+                <div class="caption">
+                    <h5 style="height: 60px; overflow: hidden; margin-top: 10px;">@sach.TenSach</h5>
+                    <p style="margin-bottom: 10px;"><strong>Đã bán: @sach.SoLuongBan</strong></p>
+                </div>
+            </div>
+        </div>
+    }
+</div>

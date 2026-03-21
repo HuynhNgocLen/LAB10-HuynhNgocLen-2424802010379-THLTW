@@ -1,0 +1,78 @@
+﻿@using PagedList.Mvc;
+@model PagedList.PagedList<HuynhNgocLen.SachOnline.Models.SACH>
+@{
+    ViewBag.Title = "Tìm kiếm";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<h2 class="text-center">KẾT QUẢ TÌM KIẾM</h2>
+<h4 class="text-center">
+    Từ khóa: <strong style="color:#0078d4">@ViewBag.TuKhoa</strong>
+    — Tìm thấy <strong style="color:red">@ViewBag.SoKetQua</strong> kết quả
+</h4>
+<hr>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-warning text-center">
+        Không tìm thấy sách nào phù hợp!
+    </div>
+}
+else
+{
+    <div class="row text-center">
+        @foreach (var sach in Model)
+        {
+            <div class="col-sm-4 col-md-4 col-lg-4 col-xs-6">
+                <div class="thumbnail">
+                    <a href="@Url.Action("ChiTietSach","SachOnline", new { id = sach.MaSach })">
+                        <img src="~/Images/@sach.AnhBia" alt="@sach.TenSach"
+                             class="img-responsive img-rounded imgbook">
+                    </a>
+                    <div class="caption">
+                        <h4 style="min-height:70px;">
+                            <a href="@Url.Action("ChiTietSach","SachOnline", new { id = sach.MaSach })">
+                                @sach.TenSach
+                            </a>
+                        </h4>
+                        <p>
+                            Giá: <span style="color:red; font-weight:bold">
+                                @String.Format("{0:0,0}", sach.GiaBan) VNĐ
+                            </span>
+                        </p>
+                        <p>
+                            <a href="@Url.Action("ThemGioHang","GioHang", new { ms = sach.MaSach, url = Request.Url.ToString() })"
+                               class="btn btn-primary">
+                                <span class="glyphicon glyphicon-shopping-cart"></span> Add to Cart
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="MenuTrang">
+        Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+        @Html.PagedListPager(Model, page => Url.Action("Search",
+            new { data = ViewBag.TuKhoa, page = page }))
+    </div>
+}
+
+<style>
+    .MenuTrang {
+        display: inline;
+        text-align: center;
+    }
+
+    .imgbook {
+        width: 100%;
+        height: auto;
+        transition: all 0.5s ease-in;
+    }
+
+        .imgbook:hover {
+            transform: scale(0.9);
+            cursor: pointer;
+        }
+</style>
