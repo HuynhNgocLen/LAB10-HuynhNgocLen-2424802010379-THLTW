@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Dashboard Admin";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-center text-primary" style="font-weight:bold; margin-top:20px;">THỐNG KÊ TỔNG QUAN</h2>
+<hr />
+
+<div class="row text-center">
+    <div class="col-md-3">
+        <div class="panel panel-info">
+            <div class="panel-heading"><h3 class="panel-title">TỔNG ĐƠN HÀNG</h3></div>
+            <div class="panel-body">
+                <h2 style="color:#31708f">@ViewBag.TongDonHang</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-success">
+            <div class="panel-heading"><h3 class="panel-title">TỔNG DOANH THU</h3></div>
+            <div class="panel-body">
+                <h2 style="color:#3c763d">@string.Format("{0:#,##0}", ViewBag.TongDoanhThu) đ</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-warning">
+            <div class="panel-heading"><h3 class="panel-title">KHÁCH HÀNG</h3></div>
+            <div class="panel-body">
+                <h2 style="color:#8a6d3b">@ViewBag.SoKhachHang</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="panel panel-danger">
+            <div class="panel-heading"><h3 class="panel-title">SỐ LƯỢNG SÁCH</h3></div>
+            <div class="panel-body">
+                <h2 style="color:#a94442">@ViewBag.SoSach</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info" style="margin-top:30px;">
+    Chào mừng bạn đến với trang quản trị <strong>SachOnline</strong>. Hãy chọn các mục ở menu phía trên để quản lý dữ liệu.
+</div>

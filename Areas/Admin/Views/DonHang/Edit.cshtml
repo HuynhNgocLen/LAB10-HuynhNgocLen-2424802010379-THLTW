@@ -1,0 +1,41 @@
+﻿@model HuynhNgocLen.SachOnline.Models.DONDATHANG
+@{
+    ViewBag.Title = "Cập nhật Đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-primary">CẬP NHẬT ĐƠN HÀNG #@Model.MaDonHang</h2>
+
+@using (Html.BeginForm("Edit", "DonHang", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.HiddenFor(model => model.MaDonHang)
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Tình trạng giao hàng</label>
+            <div class="col-md-10">
+                <select name="TinhTrangGiaoHang" class="form-control">
+                    <option value="0" @(Model.TinhTrangGiaoHang == 0 || Model.TinhTrangGiaoHang == null ? "selected" : "")>Chưa giao hàng</option>
+                    <option value="1" @(Model.TinhTrangGiaoHang == 1 ? "selected" : "")>Đã giao hàng</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Ngày giao</label>
+            <div class="col-md-10">
+                <input type="date" name="Ngaygiao" class="form-control"
+                       value="@(Model.NgayGiao.HasValue ? Model.NgayGiao.Value.ToString("yyyy-MM-dd") : "")" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Lưu thay đổi" class="btn btn-warning" />
+                <a href="@Url.Action("Index", "DonHang")" class="btn btn-default">Hủy</a>
+            </div>
+        </div>
+    </div>
+}

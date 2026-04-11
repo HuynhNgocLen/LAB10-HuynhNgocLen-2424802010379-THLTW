@@ -1,0 +1,73 @@
+﻿@model HuynhNgocLen.SachOnline.Models.SACH
+@{
+    ViewBag.Title = "Thêm sách mới";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-0 py-3">
+                    <h4 class="mb-0 text-dark fw-semibold">Thêm sách mới</h4>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.ThongBao != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @ViewBag.ThongBao
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    @using (Html.BeginForm("Create", "Sach", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label class="form-label fw-medium">Tên sách</label>
+                                @Html.EditorFor(model => model.TenSach, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Chủ đề</label>
+                                @Html.DropDownList("MaCD", null, new { @class = "form-select" })
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Nhà xuất bản</label>
+                                @Html.DropDownList("MaNXB", null, new { @class = "form-select" })
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Giá bán (đ)</label>
+                                <input type="number" name="GiaBan" class="form-control" min="0" required />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Số lượng</label>
+                                <input type="number" name="SoLuongBan" class="form-control" min="1" required />
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-medium">Ảnh bìa</label>
+                                <input type="file" name="fFileUpload" class="form-control" accept="image/*" required />
+                                <small class="text-muted">Chọn file ảnh (jpg, png...)</small>
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-medium">Mô tả</label>
+                                <textarea name="MoTa" class="form-control" rows="6"></textarea>
+                            </div>
+
+                            <div class="col-12 pt-3">
+                                <button type="submit" class="btn btn-primary px-5">Thêm sách</button>
+                                <a href="@Url.Action("Index", "Sach")" class="btn btn-light ms-2">Quay lại</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

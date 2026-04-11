@@ -1,0 +1,43 @@
+﻿@model HuynhNgocLen.SachOnline.Models.NHAXUATBAN
+@{
+    ViewBag.Title = "Sửa Nhà Xuất Bản";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-primary">SỬA NHÀ XUẤT BẢN</h2>
+
+@using (Html.BeginForm("Edit", "NhaXuatBan", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.MaNXB) <div class="form-group">
+            <label class="control-label col-md-2">Tên NXB</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TenNXB, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Địa Chỉ</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Điện Thoại</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DienThoai, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Lưu thay đổi" class="btn btn-warning" />
+                <a href="@Url.Action("Index", "NhaXuatBan")" class="btn btn-default">Quay lại</a>
+            </div>
+        </div>
+    </div>
+}

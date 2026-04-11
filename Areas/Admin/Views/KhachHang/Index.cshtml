@@ -1,0 +1,42 @@
+﻿@model IEnumerable<HuynhNgocLen.SachOnline.Models.KHACHHANG>
+@{
+    ViewBag.Title = "Quản lý Khách Hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container mt-4">
+    <h2>Danh Sách Khách Hàng</h2>
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Tên Khách Hàng</th>
+                <th>Email</th>
+                <th>Số Điện Thoại</th>
+                <th>Địa Chỉ</th>
+                <th>Hành Động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="text-start fw-medium">@item.MaKH</td>
+                    <td class="ps-4 fw-medium">@item.HoTen</td>
+                    <td class="text-end pe-4">@item.Email</td>
+                    <td class="text-end pe-4">@item.DienThoai</td>
+                    <td class="text-end pe-4">@item.DiaChi</td>
+                    <td class="text-end pe-4">
+                        <a href="@Url.Action("Edit", "KhachHang", new { id = item.MaKH })"
+                           class="btn btn-outline-primary btn-sm me-1">
+                            <i class="bi bi-pencil"></i> Sửa
+                        </a>
+                        <a href="@Url.Action("Delete", "KhachHang", new { id = item.MaKH })"
+                           class="btn btn-outline-danger btn-sm">
+                            <i class="bi bi-trash"></i> Xóa
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>

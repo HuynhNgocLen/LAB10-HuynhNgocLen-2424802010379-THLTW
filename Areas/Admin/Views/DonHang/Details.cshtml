@@ -1,0 +1,59 @@
+﻿@model HuynhNgocLen.SachOnline.Models.DONDATHANG
+@{
+    ViewBag.Title = "Chi tiết đơn hàng";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+
+    // Lấy list chi tiết từ ViewBag ép kiểu lại
+    var chiTiet = ViewBag.ChiTiet as IEnumerable<HuynhNgocLen.SachOnline.Models.CHITIETDATHANG>;
+    decimal tongTien = 0;
+}
+
+<h2 class="text-primary">CHI TIẾT ĐƠN HÀNG #@Model.MaDonHang</h2>
+<hr />
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h4><strong>Thông tin khách hàng</strong></h4>
+        <p><strong>Họ tên:</strong> @(Model.KHACHHANG != null ? Model.KHACHHANG.HoTen : "")</p>
+        <p><strong>Điện thoại:</strong> @(Model.KHACHHANG != null ? Model.KHACHHANG.DienThoai : "")</p>
+        <p><strong>Địa chỉ nhận:</strong> @(Model.KHACHHANG != null ? Model.KHACHHANG.DiaChi : "")</p>
+    </div>
+    <div class="col-md-6">
+        <h4><strong>Thông tin đơn hàng</strong></h4>
+        <p><strong>Ngày đặt:</strong> @(Model.NgayDat.HasValue ? Model.NgayDat.Value.ToString("dd/MM/yyyy") : "")</p>
+        <p><strong>Tình trạng:</strong> @(Model.TinhTrangGiaoHang == 1 ? "Đã giao hàng" : "Chưa giao hàng")</p>
+    </div>
+</div>
+
+<h4><strong>Danh sách sản phẩm</strong></h4>
+<table class="table table-bordered">
+    <tr style="background-color:#f8f9fa;">
+        <th>Tên sách</th>
+        <th>Số lượng</th>
+        <th>Đơn giá</th>
+        <th>Thành tiền</th>
+    </tr>
+    @if (chiTiet != null)
+    {
+        foreach (var item in chiTiet)
+        {
+            var thanhTien = item.SoLuong * item.DonGia;
+            tongTien += (decimal)thanhTien;
+            <tr>
+                <td>@(item.SACH != null ? item.SACH.TenSach : "Sách không tồn tại")</td>
+                <td>@item.SoLuong</td>
+                <td>@string.Format("{0:#,##0}", item.DonGia) đ</td>
+                <td>@string.Format("{0:#,##0}", thanhTien) đ</td>
+            </tr>
+        }
+    }
+    <tr>
+        <td colspan="3" class="text-right"><strong>Tổng cộng:</strong></td>
+        <td><strong class="text-danger">@string.Format("{0:#,##0}", tongTien) đ</strong></td>
+    </tr>
+</table>
+
+<p>
+    <a href="@Url.Action("Index", "DonHang")" class="btn btn-default">Quay lại danh sách</a>
+    <a href="@Url.Action("Edit", "DonHang", new { id = Model.MaDonHang })" class="btn btn-warning">Cập nhật đơn hàng</a>
+</p>

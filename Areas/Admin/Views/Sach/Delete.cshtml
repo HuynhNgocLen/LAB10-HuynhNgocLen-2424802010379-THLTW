@@ -1,0 +1,45 @@
+﻿@model HuynhNgocLen.SachOnline.Models.SACH
+@{
+    ViewBag.Title = "Xác nhận xóa";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-exclamation-triangle text-danger" style="font-size: 3rem;"></i>
+                    </div>
+                    <h3 class="text-center text-danger fw-semibold">Xác nhận xóa sách</h3>
+                    <p class="text-center text-muted">Hành động này không thể hoàn tác.</p>
+
+                    <div class="border rounded p-4 bg-light mb-4">
+                        <dl class="row">
+                            <dt class="col-sm-4 text-muted">Tên sách</dt>
+                            <dd class="col-sm-8 fw-medium">@Model.TenSach</dd>
+
+                            <dt class="col-sm-4 text-muted">Ảnh bìa</dt>
+                            <dd class="col-sm-8">
+                                <img src="~/Images/@Model.AnhBia" class="rounded border" width="110" alt="" />
+                            </dd>
+
+                            <dt class="col-sm-4 text-muted">Giá bán</dt>
+                            <dd class="col-sm-8 fw-medium">@string.Format("{0:N0}", Model.GiaBan) đ</dd>
+                        </dl>
+                    </div>
+
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="submit" class="btn btn-danger px-5">Xác nhận xóa</button>
+                            <a href="@Url.Action("Index")" class="btn btn-light px-5">Hủy bỏ</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

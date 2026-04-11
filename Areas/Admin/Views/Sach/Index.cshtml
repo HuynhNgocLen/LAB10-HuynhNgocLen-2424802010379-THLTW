@@ -1,0 +1,65 @@
+﻿@model IEnumerable<HuynhNgocLen.SachOnline.Models.SACH>
+@{
+    ViewBag.Title = "Quản lý Sách";
+    ViewBag.ActiveMenu = "Sach";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-dark fw-semibold">Quản lý Sách</h2>
+        <a href="@Url.Action("Create", "Sach")" class="btn btn-primary shadow-sm">
+            <i class="bi bi-plus-lg"></i> Thêm sách mới
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Tên sách</th>
+                            <th>Ảnh bìa</th>
+                            <th class="text-end">Giá bán</th>
+                            <th class="text-center">Số lượng</th>
+                            <th>Cập nhật</th>
+                            <th class="text-end pe-4">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-medium">@item.TenSach</td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.AnhBia))
+                                    {
+                                        <img src="~/Images/@item.AnhBia"
+                                             class="rounded"
+                                             width="60"
+                                             style="object-fit: cover; height: 60px;"
+                                             alt="@item.TenSach" />
+                                    }
+                                </td>
+                                <td class="text-end fw-medium">@string.Format("{0:N0}", item.GiaBan) đ</td>
+                                <td class="text-center">@item.SoLuongBan</td>
+                                <td>@(item.NgayCapNhat.HasValue ? item.NgayCapNhat.Value.ToString("dd/MM/yyyy") : "—")</td>
+                                <td class="text-end pe-4">
+                                    <a href="@Url.Action("Edit", "Sach", new { id = item.MaSach })"
+                                       class="btn btn-outline-primary btn-sm me-1">
+                                        <i class="bi bi-pencil"></i> Sửa
+                                    </a>
+                                    <a href="@Url.Action("Delete", "Sach", new { id = item.MaSach })"
+                                       class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-trash"></i> Xóa
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

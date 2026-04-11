@@ -1,0 +1,71 @@
+﻿@model HuynhNgocLen.SachOnline.Models.SACH
+@{
+    ViewBag.Title = "Chỉnh sửa sách";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-0 py-3">
+                    <h4 class="mb-0 text-dark fw-semibold">Điều chỉnh thông tin sách</h4>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("Edit", "Sach", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(model => model.MaSach)
+
+                        <div class="row g-3">
+                            <!-- Tương tự Create, nhưng thêm phần ảnh hiện tại -->
+                            <div class="col-md-12">
+                                <label class="form-label fw-medium">Tên sách</label>
+                                @Html.EditorFor(model => model.TenSach, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Chủ đề</label>
+                                @Html.DropDownList("MaCD", null, new { @class = "form-select" })
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Nhà xuất bản</label>
+                                @Html.DropDownList("MaNXB", null, new { @class = "form-select" })
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-medium">Ảnh bìa hiện tại</label>
+                                <div class="mb-3">
+                                    <img src="~/Images/@Model.AnhBia"
+                                         class="rounded border"
+                                         width="140"
+                                         style="object-fit: cover;"
+                                         alt="Ảnh bìa" />
+                                </div>
+                                <label class="form-label">Chọn ảnh mới (nếu muốn thay đổi)</label>
+                                <input type="file" name="fFileUpload" class="form-control" accept="image/*" />
+                                <small class="text-muted">Để trống nếu không thay đổi ảnh</small>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-medium">Giá bán (đ)</label>
+                                @Html.EditorFor(model => model.GiaBan, new { htmlAttributes = new { @class = "form-control" } })
+                            </div>
+
+                            <div class="col-md-12">
+                                <label class="form-label fw-medium">Mô tả</label>
+                                <textarea name="MoTa" class="form-control" rows="6">@Model.MoTa</textarea>
+                            </div>
+
+                            <div class="col-12 pt-3">
+                                <button type="submit" class="btn btn-warning px-5">Lưu thay đổi</button>
+                                <a href="@Url.Action("Index")" class="btn btn-light ms-2">Quay lại</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

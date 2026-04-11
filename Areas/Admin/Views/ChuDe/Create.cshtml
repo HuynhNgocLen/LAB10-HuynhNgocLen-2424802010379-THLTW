@@ -1,0 +1,31 @@
+﻿@model HuynhNgocLen.SachOnline.Models.CHUDE
+@{
+    ViewBag.Title = "Thêm Chủ Đề Mới";
+    Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h2 class="text-primary">THÊM CHỦ ĐỀ MỚI</h2>
+
+@using (Html.BeginForm("Create", "ChuDe", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Tên Chủ Đề</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TenChuDe, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Nhập tên chủ đề..." } })
+                @Html.ValidationMessageFor(model => model.TenChuDe, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Thêm mới" class="btn btn-primary" />
+                <a href="@Url.Action("Index", "ChuDe")" class="btn btn-default">Quay lại danh sách</a>
+            </div>
+        </div>
+    </div>
+}
