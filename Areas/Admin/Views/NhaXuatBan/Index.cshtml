@@ -1,16 +1,32 @@
-﻿@model IEnumerable<HuynhNgocLen.SachOnline.Models.NHAXUATBAN>
+﻿@model PagedList.IPagedList<HuynhNgocLen.SachOnline.Models.NHAXUATBAN>
+@using PagedList.Mvc
+
 @{
     ViewBag.Title = "Quản lý Nhà Xuất Bản";
+    ViewBag.ActiveMenu = "NhaXuatBan";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-dark fw-semibold">Quản lý Sách</h2>
+        <h2 class="text-dark fw-semibold">Quản lý Nhà Xuất Bản</h2>
         <a href="@Url.Action("Create", "NhaXuatBan")" class="btn btn-primary shadow-sm">
             <i class="bi bi-plus-lg"></i> Thêm mới nhà xuất bản
         </a>
     </div>
+
+    @using (Html.BeginForm("Index", "NhaXuatBan", FormMethod.Get, new { @class = "mb-3" }))
+    {
+        <div class="input-group" style="max-width:400px;">
+            @Html.TextBox("tuKhoa", ViewBag.TuKhoa as string, new { @class = "form-control border-end-0", placeholder = "Tìm theo tên nhà xuất bản..." })
+            <button type="submit" class="btn btn-white bg-white border border-start-0 text-primary">
+                <i class="bi bi-search"></i> Tìm kiếm
+            </button>
+            <a href="@Url.Action("Index")" class="btn btn-light border">Xóa lọc</a>
+        </div>
+    }
 
     <div class="card shadow-sm border-0">
         <div class="card-body p-0">
@@ -18,7 +34,10 @@
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th class="ps-4">Tên nhà xuất bản</th>
+                            <th class="ps-4">Mã NXB</th>
+                            <th>Tên Nhà Xuất Bản</th>
+                            <th>Địa Chỉ</th>
+                            <th>Điện Thoại</th>
                             <th class="text-end pe-4">Hành động</th>
                         </tr>
                     </thead>
@@ -26,7 +45,10 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td class="ps-4 fw-medium">@item.TenNXB</td>
+                                <td class="ps-4 fw-medium">@item.MaNXB</td>
+                                <td class="fw-medium">@item.TenNXB</td>
+                                <td>@item.DiaChi</td>
+                                <td>@item.DienThoai</td>
                                 <td class="text-end pe-4">
                                     <a href="@Url.Action("Edit", "NhaXuatBan", new { id = item.MaNXB })"
                                        class="btn btn-outline-primary btn-sm me-1">
@@ -42,4 +64,24 @@
                     </tbody>
                 </table>
             </div>
+        </div>
     </div>
+
+    <div class="mt-3 text-center">
+        <p class="text-muted">
+            Trang @Model.PageNumber / @Model.PageCount
+            &nbsp;|&nbsp;
+            Tổng: @Model.TotalItemCount nhà xuất bản
+        </p>
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, tuKhoa = ViewBag.TuKhoa }),
+            new PagedListRenderOptions
+            {
+                LiElementClasses = new[] { "page-item" },
+                DisplayLinkToFirstPage = PagedListDisplayMode.Always,
+                DisplayLinkToLastPage = PagedListDisplayMode.Always,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always,
+                MaximumPageNumbersToDisplay = 5
+            })
+    </div>
+</div>

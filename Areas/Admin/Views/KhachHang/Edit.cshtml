@@ -1,71 +1,418 @@
 ﻿@model HuynhNgocLen.SachOnline.Models.KHACHHANG
 @{
     ViewBag.Title = "Sửa Thông Tin Khách Hàng";
+    ViewBag.ActiveMenu = "KhachHang";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2 class="text-primary">SỬA THÔNG TIN KHÁCH HÀNG</h2>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-@using (Html.BeginForm("Edit", "KhachHang", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <hr />
-        @Html.HiddenFor(model => model.MaKH)
-        @Html.HiddenFor(model => model.TaiKhoan) <div class="form-group">
-            <label class="control-label col-md-2">Tài khoản</label>
-            <div class="col-md-10">
-                <input type="text" class="form-control" value="@Model.TaiKhoan" disabled />
+    .kh-edit-wrapper {
+        font-family: 'Inter', sans-serif;
+        padding: 2rem 1.5rem;
+        min-height: 100vh;
+        background: #f8fafc;
+    }
+
+    /* --- Breadcrumb --- */
+    .kh-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        color: #94a3b8;
+        margin-bottom: 1.5rem;
+    }
+
+        .kh-breadcrumb a {
+            color: #64748b;
+            text-decoration: none;
+        }
+
+            .kh-breadcrumb a:hover {
+                color: #6366f1;
+            }
+
+        .kh-breadcrumb span {
+            color: #cbd5e1;
+        }
+
+    /* --- Card --- */
+    .kh-card {
+        max-width: 680px;
+        margin: 0 auto;
+        background: #fff;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 20px rgba(99,102,241,0.06);
+        overflow: hidden;
+    }
+
+    /* --- Header --- */
+    .kh-card-header {
+        padding: 1.5rem 2rem;
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .kh-header-icon {
+        width: 42px;
+        height: 42px;
+        background: #eef2ff;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+        .kh-header-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke: #6366f1;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+    .kh-header-text h5 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin: 0 0 0.15rem;
+    }
+
+    .kh-header-text p {
+        font-size: 0.78rem;
+        color: #94a3b8;
+        margin: 0;
+    }
+
+    /* --- Body --- */
+    .kh-card-body {
+        padding: 1.8rem 2rem 2rem;
+    }
+
+    .kh-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 1.25rem;
+    }
+
+    .kh-full {
+        grid-column: 1 / -1;
+    }
+
+    /* --- Field --- */
+    .kh-field {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .kh-label {
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #475569;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.4rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+
+    .kh-readonly-badge {
+        font-size: 0.62rem;
+        font-weight: 500;
+        background: #f1f5f9;
+        color: #94a3b8;
+        border-radius: 4px;
+        padding: 0.1rem 0.4rem;
+        letter-spacing: 0;
+    }
+
+    .kh-input-wrap {
+        position: relative;
+    }
+
+        .kh-input-wrap .kh-icon {
+            position: absolute;
+            left: 11px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 15px;
+            height: 15px;
+            stroke: #cbd5e1;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            pointer-events: none;
+        }
+
+        .kh-input-wrap input {
+            width: 100%;
+            padding: 0.6rem 0.85rem 0.6rem 2.1rem;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 9px;
+            font-size: 0.88rem;
+            font-family: 'Inter', sans-serif;
+            color: #1e293b;
+            background: #fff;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+            .kh-input-wrap input:focus {
+                border-color: #6366f1;
+                box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+            }
+
+            .kh-input-wrap input:disabled {
+                background: #f8fafc;
+                color: #94a3b8;
+                cursor: not-allowed;
+                border-color: #e2e8f0;
+            }
+
+    /* --- Divider --- */
+    .kh-divider {
+        grid-column: 1 / -1;
+        height: 1px;
+        background: #f1f5f9;
+        margin: 0.5rem 0;
+    }
+
+    /* --- Section label --- */
+    .kh-section-label {
+        grid-column: 1 / -1;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #94a3b8;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+    }
+
+    /* --- Actions --- */
+    .kh-actions {
+        grid-column: 1 / -1;
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+        padding-top: 0.25rem;
+    }
+
+    .kh-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.58rem 1.35rem;
+        background: #6366f1;
+        color: #fff;
+        border: none;
+        border-radius: 9px;
+        font-size: 0.86rem;
+        font-weight: 600;
+        font-family: 'Inter', sans-serif;
+        cursor: pointer;
+        transition: background 0.15s, box-shadow 0.15s, transform 0.12s;
+        box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+    }
+
+        .kh-btn-primary:hover {
+            background: #4f46e5;
+            box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+            transform: translateY(-1px);
+        }
+
+        .kh-btn-primary svg {
+            width: 15px;
+            height: 15px;
+            stroke: #fff;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+    .kh-btn-ghost {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.58rem 1.15rem;
+        background: transparent;
+        color: #64748b;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 9px;
+        font-size: 0.86rem;
+        font-weight: 500;
+        font-family: 'Inter', sans-serif;
+        text-decoration: none;
+        transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.12s;
+    }
+
+        .kh-btn-ghost:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            color: #334155;
+            transform: translateY(-1px);
+        }
+
+        .kh-btn-ghost svg {
+            width: 14px;
+            height: 14px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+    /* Validation */
+    .field-validation-error {
+        font-size: 0.75rem;
+        color: #ef4444;
+        margin-top: 0.3rem;
+        display: block;
+    }
+
+    .input-validation-error {
+        border-color: #fca5a5 !important;
+        background: #fff5f5 !important;
+    }
+
+    @@media (max-width: 540px) {
+        .kh-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .kh-full, .kh-actions, .kh-divider, .kh-section-label {
+            grid-column: 1;
+        }
+
+        .kh-card-body {
+            padding: 1.4rem 1.2rem 1.6rem;
+        }
+
+        .kh-card-header {
+            padding: 1.2rem 1.2rem;
+        }
+    }
+</style>
+
+<div class="kh-edit-wrapper">
+
+    <nav class="kh-breadcrumb">
+        <a href="@Url.Action("Index", "KhachHang")">Khách hàng</a>
+        <span>›</span>
+        <span>Sửa thông tin</span>
+    </nav>
+
+    <div class="kh-card">
+        <div class="kh-card-header">
+            <div class="kh-header-icon">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+            </div>
+            <div class="kh-header-text">
+                <h5>Sửa Thông Tin Khách Hàng</h5>
+                <p>Cập nhật hồ sơ và thông tin liên hệ · Mã KH: <strong>@Model.MaKH</strong></p>
             </div>
         </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2">Họ tên</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.HoTen, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
-            </div>
+        <div class="kh-card-body">
+            @using (Html.BeginForm("Edit", "KhachHang", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.MaKH)
+                @Html.HiddenFor(model => model.TaiKhoan)
+
+                <div class="kh-grid">
+
+                    <div class="kh-field kh-full">
+                        <label class="kh-label">
+                            Tài khoản
+                            <span class="kh-readonly-badge">Không thể sửa</span>
+                        </label>
+                        <div class="kh-input-wrap">
+                            <svg class="kh-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                            <input type="text" value="@Model.TaiKhoan" disabled />
+                        </div>
+                    </div>
+
+                    <div class="kh-field kh-full">
+                        <label class="kh-label">Họ và tên</label>
+                        <div class="kh-input-wrap">
+                            <svg class="kh-icon" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                            @Html.EditorFor(model => model.HoTen, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập họ và tên..." } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.HoTen)
+                    </div>
+
+                    <div class="kh-field">
+                        <label class="kh-label">Email</label>
+                        <div class="kh-input-wrap">
+                            <svg class="kh-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></svg>
+                            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @type = "email", placeholder = "email@example.com" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.Email)
+                    </div>
+
+                    <div class="kh-field">
+                        <label class="kh-label">Điện thoại</label>
+                        <div class="kh-input-wrap">
+                            <svg class="kh-icon" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.78a16 16 0 0 0 5.61 5.61l1.71-1.71a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.03z" /></svg>
+                            @Html.EditorFor(model => model.DienThoai, new { htmlAttributes = new { @class = "form-control", placeholder = "0xxx xxx xxx" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.DienThoai)
+                    </div>
+
+                    <div class="kh-field kh-full">
+                        <label class="kh-label">Địa chỉ</label>
+                        <div class="kh-input-wrap">
+                            <svg class="kh-icon" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
+                            @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control", placeholder = "Nhập địa chỉ..." } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.DiaChi)
+                    </div>
+
+                    <div class="kh-field">
+                        <label class="kh-label">Ngày sinh</label>
+                        <div class="kh-input-wrap">
+                            <svg class="kh-icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                            <input type="date" name="NgaySinh" class="form-control"
+                                   value="@(Model.NgaySinh.HasValue ? Model.NgaySinh.Value.ToString("yyyy-MM-dd") : "")" />
+                        </div>
+                    </div>
+
+                    <div class="kh-field">
+                        <label class="kh-label">Mật khẩu mới</label>
+                        <div class="kh-input-wrap">
+                            <svg class="kh-icon" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
+                            <input type="password" name="MatKhau" class="form-control" placeholder="Để trống nếu không đổi" />
+                        </div>
+                    </div>
+
+                    <div class="kh-divider"></div>
+
+                    <div class="kh-actions">
+                        <button type="submit" class="kh-btn-primary">
+                            <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13 7 21" /><polyline points="7 3 7 8 15 8" /></svg>
+                            Lưu thay đổi
+                        </button>
+                        <a href="@Url.Action("Index", "KhachHang")" class="kh-btn-ghost">
+                            <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6" /></svg>
+                            Quay lại
+                        </a>
+                    </div>
+
+                </div>
+            }
         </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2">Mật khẩu mới</label>
-            <div class="col-md-10">
-                <input type="password" name="MatKhau" class="form-control" placeholder="Để trống nếu không muốn đổi mật khẩu" />
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">Email</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @type = "email" } })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">Địa chỉ</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">Điện thoại</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DienThoai, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">Ngày sinh</label>
-            <div class="col-md-10">
-                <input type="date" name="NgaySinh" class="form-control" value="@(Model.NgaySinh.HasValue ? Model.NgaySinh.Value.ToString("yyyy-MM-dd") : "")" />
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Lưu thay đổi" class="btn btn-warning" />
-                <a href="@Url.Action("Index", "KhachHang")" class="btn btn-default">Quay lại</a>
-            </div>
-        </div>
     </div>
-}
+</div>

@@ -4,41 +4,75 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2 class="text-primary">THÊM NHÀ XUẤT BẢN</h2>
+<div class="container-fluid py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-0 py-3">
+                    <h4 class="mb-0 fw-semibold text-dark">
+                        <i class="bi bi-building me-2 text-primary"></i>Thêm Nhà Xuất Bản Mới
+                    </h4>
+                </div>
+                <div class="card-body">
 
-@using (Html.BeginForm("Create", "NhaXuatBan", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
-        <div class="form-group">
-            <label class="control-label col-md-2">Tên NXB</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TenNXB, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
-            </div>
-        </div>
+                    @using (Html.BeginForm("Create", "NhaXuatBan", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            <label class="control-label col-md-2">Địa Chỉ</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Tên Nhà Xuất Bản <span class="text-danger">*</span></label>
+                            @Html.EditorFor(model => model.TenNXB, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                                    @placeholder = "Nhập tên nhà xuất bản...",
+                                    @required = "required",
+                                    autofocus = "autofocus"
+                                }
+                            })
+                            @Html.ValidationMessageFor(model => model.TenNXB, "", new { @class = "text-danger small" })
+                        </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2">Điện Thoại</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DienThoai, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-medium">Địa Chỉ</label>
+                            @Html.EditorFor(model => model.DiaChi, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                                    @placeholder = "Nhập địa chỉ..."
+                                }
+                            })
+                            @Html.ValidationMessageFor(model => model.DiaChi, "", new { @class = "text-danger small" })
+                        </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Thêm mới" class="btn btn-primary" />
-                <a href="@Url.Action("Index", "NhaXuatBan")" class="btn btn-default">Quay lại</a>
+                        <div class="mb-4">
+                            <label class="form-label fw-medium">Điện Thoại</label>
+                            @Html.EditorFor(model => model.DienThoai, new
+                            {
+                                htmlAttributes = new
+                                {
+                                    @class = "form-control",
+                                    @placeholder = "Nhập số điện thoại..."
+                                }
+                            })
+                            @Html.ValidationMessageFor(model => model.DienThoai, "", new { @class = "text-danger small" })
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-plus-lg me-1"></i> Thêm mới
+                            </button>
+                            <a href="@Url.Action("Index", "NhaXuatBan")" class="btn btn-light px-4">
+                                <i class="bi bi-arrow-left me-1"></i> Quay lại
+                            </a>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
-}
+</div>

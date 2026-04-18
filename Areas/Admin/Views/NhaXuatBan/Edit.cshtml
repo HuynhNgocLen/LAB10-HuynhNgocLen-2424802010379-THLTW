@@ -4,40 +4,224 @@
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<h2 class="text-primary">SỬA NHÀ XUẤT BẢN</h2>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&display=swap');
 
-@using (Html.BeginForm("Edit", "NhaXuatBan", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.MaNXB) <div class="form-group">
-            <label class="control-label col-md-2">Tên NXB</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TenNXB, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
+    .edit-page-wrapper {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        min-height: 100vh;
+        padding: 2rem 1.5rem;
+        background: #f0f4ff;
+    }
+
+    .edit-card {
+        max-width: 600px;
+        margin: 0 auto;
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 4px 32px rgba(14, 116, 144, 0.10), 0 1.5px 6px rgba(0,0,0,0.05);
+        overflow: hidden;
+    }
+
+    .edit-card-header {
+        background: linear-gradient(120deg, #0e7490 0%, #06b6d4 100%);
+        padding: 2rem 2.2rem 1.8rem;
+        position: relative;
+    }
+
+    .edit-card-header::after {
+        content: '';
+        position: absolute;
+        bottom: -18px;
+        left: 0; right: 0;
+        height: 36px;
+        background: #ffffff;
+        border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    }
+
+    .header-icon {
+        width: 44px; height: 44px;
+        background: rgba(255,255,255,0.18);
+        border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 0.9rem;
+    }
+
+    .header-icon svg {
+        width: 22px; height: 22px;
+        stroke: #fff; fill: none;
+        stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .edit-card-header h4 {
+        color: #fff; font-size: 1.25rem;
+        font-weight: 700; margin: 0; letter-spacing: 0.01em;
+    }
+
+    .edit-card-header p {
+        color: rgba(255,255,255,0.78);
+        font-size: 0.82rem; margin: 0.25rem 0 0; font-weight: 400;
+    }
+
+    .edit-card-body {
+        padding: 2.4rem 2.2rem 2rem;
+    }
+
+    .field-group {
+        margin-bottom: 1.3rem;
+    }
+
+    .field-label {
+        display: block;
+        font-size: 0.75rem; font-weight: 600;
+        color: #0e7490; text-transform: uppercase;
+        letter-spacing: 0.07em; margin-bottom: 0.45rem;
+    }
+
+    .field-input-wrap { position: relative; }
+
+    .field-input-wrap svg {
+        position: absolute; left: 13px; top: 50%;
+        transform: translateY(-50%);
+        width: 16px; height: 16px;
+        stroke: #67e8f9; fill: none;
+        stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+        pointer-events: none;
+    }
+
+    .field-input-wrap input.form-control {
+        width: 100%;
+        padding: 0.65rem 0.9rem 0.65rem 2.35rem;
+        border: 1.5px solid #cffafe;
+        border-radius: 11px;
+        font-size: 0.93rem;
+        font-family: 'Be Vietnam Pro', sans-serif;
+        color: #164e63;
+        background: #f0fdff;
+        transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+        outline: none;
+        box-sizing: border-box;
+    }
+
+    .field-input-wrap input.form-control:focus {
+        border-color: #06b6d4;
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.13);
+    }
+
+    .text-danger {
+        font-size: 0.78rem; color: #ef4444;
+        margin-top: 0.3rem; display: block;
+    }
+
+    .divider {
+        height: 1px; background: #e0f7fa;
+        margin: 0.5rem 0 1.6rem;
+    }
+
+    .action-row {
+        display: flex; gap: 0.75rem; align-items: center;
+    }
+
+    .btn-save {
+        display: inline-flex; align-items: center; gap: 0.45rem;
+        padding: 0.62rem 1.6rem;
+        background: linear-gradient(120deg, #0e7490 0%, #06b6d4 100%);
+        color: #fff; border: none; border-radius: 10px;
+        font-size: 0.9rem; font-weight: 600;
+        font-family: 'Be Vietnam Pro', sans-serif;
+        cursor: pointer;
+        transition: opacity 0.18s, box-shadow 0.18s, transform 0.15s;
+        box-shadow: 0 3px 12px rgba(6,182,212,0.25);
+        text-decoration: none;
+    }
+
+    .btn-save:hover {
+        opacity: 0.92; box-shadow: 0 6px 20px rgba(6,182,212,0.32);
+        transform: translateY(-1px); color: #fff;
+    }
+
+    .btn-save svg {
+        width: 16px; height: 16px; stroke: #fff; fill: none;
+        stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+    }
+
+    .btn-back {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        padding: 0.62rem 1.3rem;
+        background: #ecfeff; color: #0e7490;
+        border: 1.5px solid #cffafe; border-radius: 10px;
+        font-size: 0.88rem; font-weight: 500;
+        font-family: 'Be Vietnam Pro', sans-serif;
+        text-decoration: none;
+        transition: background 0.18s, border-color 0.18s, transform 0.15s;
+    }
+
+    .btn-back:hover {
+        background: #cffafe; border-color: #a5f3fc;
+        color: #0c4a6e; transform: translateY(-1px);
+    }
+
+    .btn-back svg {
+        width: 15px; height: 15px; stroke: #0e7490; fill: none;
+        stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round;
+    }
+</style>
+
+<div class="edit-page-wrapper">
+    <div class="edit-card">
+        <div class="edit-card-header">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
             </div>
+            <h4>Sửa Nhà Xuất Bản</h4>
+            <p>Cập nhật thông tin nhà xuất bản trong hệ thống</p>
         </div>
 
-        <div class="form-group">
-            <label class="control-label col-md-2">Địa Chỉ</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
+        <div class="edit-card-body">
+            @using (Html.BeginForm("Edit", "NhaXuatBan", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.MaNXB)
 
-        <div class="form-group">
-            <label class="control-label col-md-2">Điện Thoại</label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.DienThoai, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
+                <div class="field-group">
+                    <label class="field-label">Tên NXB</label>
+                    <div class="field-input-wrap">
+                        <svg viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        @Html.EditorFor(model => model.TenNXB, new { htmlAttributes = new { @class = "form-control", @required = "required", @placeholder = "Nhập tên nhà xuất bản..." } })
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Lưu thay đổi" class="btn btn-warning" />
-                <a href="@Url.Action("Index", "NhaXuatBan")" class="btn btn-default">Quay lại</a>
-            </div>
+                <div class="field-group">
+                    <label class="field-label">Địa Chỉ</label>
+                    <div class="field-input-wrap">
+                        <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        @Html.EditorFor(model => model.DiaChi, new { htmlAttributes = new { @class = "form-control", @placeholder = "Nhập địa chỉ..." } })
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label">Điện Thoại</label>
+                    <div class="field-input-wrap">
+                        <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.18h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.78a16 16 0 0 0 5.61 5.61l1.71-1.71a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7a2 2 0 0 1 1.72 2.03z"/></svg>
+                        @Html.EditorFor(model => model.DienThoai, new { htmlAttributes = new { @class = "form-control", @placeholder = "Nhập số điện thoại..." } })
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="action-row">
+                    <button type="submit" class="btn-save">
+                        <svg viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        Lưu thay đổi
+                    </button>
+                    <a href="@Url.Action("Index", "NhaXuatBan")" class="btn-back">
+                        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                        Quay lại
+                    </a>
+                </div>
+            }
         </div>
     </div>
-}
+</div>

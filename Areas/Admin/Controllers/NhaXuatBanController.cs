@@ -1,4 +1,5 @@
-﻿using HuynhNgocLen.SachOnline.Models;
+using HuynhNgocLen.SachOnline.Models;
+using PagedList;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -8,10 +9,22 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
     {
         SachOnlineEntities1 db = new SachOnlineEntities1();
 
-        // DANH SÁCH NXB
-        public ActionResult Index()
+        // DANH SÁCH NXB (có tìm kiếm + phân trang, mỗi trang 15)
+        public ActionResult Index(int? page, string tuKhoa)
         {
-            return View(db.NHAXUATBANs.ToList());
+            int pageSize = 15;
+            int pageNumber = (page ?? 1);
+
+            ViewBag.TuKhoa = tuKhoa;
+
+            var listNXB = db.NHAXUATBANs.AsQueryable();
+
+            if (!string.IsNullOrEmpty(tuKhoa))
+            {
+                listNXB = listNXB.Where(n => n.TenNXB.Contains(tuKhoa));
+            }
+
+            return View(listNXB.OrderBy(n => n.MaNXB).ToPagedList(pageNumber, pageSize));
         }
 
         // THÊM NXB
@@ -21,7 +34,7 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
             return View();
         }
 
-        //THÊM NXB
+        // THÊM NXB
         [HttpPost]
         public ActionResult Create(NHAXUATBAN nxb)
         {
@@ -71,7 +84,7 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
             return View(nxb);
         }
 
-        //  XÓA NXB
+        // XÓA NXB
         [HttpPost, ActionName("Delete")]
         public ActionResult ConfirmDelete(int id)
         {

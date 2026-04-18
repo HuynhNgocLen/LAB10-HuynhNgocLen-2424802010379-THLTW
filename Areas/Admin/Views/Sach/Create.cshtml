@@ -1,6 +1,7 @@
 ﻿@model HuynhNgocLen.SachOnline.Models.SACH
 @{
     ViewBag.Title = "Thêm sách mới";
+    ViewBag.ActiveMenu = "Sach";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
@@ -71,3 +72,20 @@
         </div>
     </div>
 </div>
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    CKEDITOR.replace('MoTa', {
+        language: 'vi',
+        height: 300,
+        versionCheck: false,
+        toolbar: [
+            { name: 'basicstyles', items: ['Bold', 'Italic', 'Underline', 'Strike', '-', 'RemoveFormat'] },
+            { name: 'paragraph', items: ['NumberedList', 'BulletedList', '-', 'Blockquote'] },
+            { name: 'links', items: ['Link', 'Unlink'] },
+            { name: 'insert', items: ['Image', 'Table', 'HorizontalRule'] },
+            { name: 'styles', items: ['Styles', 'Format', 'FontSize'] },
+            { name: 'colors', items: ['TextColor', 'BGColor'] },
+            { name: 'tools', items: ['Maximize', 'Source'] }
+        ]
+    });
+</script>

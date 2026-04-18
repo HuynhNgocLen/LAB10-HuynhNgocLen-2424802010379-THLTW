@@ -1,4 +1,5 @@
-﻿using HuynhNgocLen.SachOnline.Models;
+using HuynhNgocLen.SachOnline.Models;
+using PagedList;
 using System;
 using System.IO;
 using System.Linq;
@@ -12,10 +13,21 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
         SachOnlineEntities1 db = new SachOnlineEntities1();
 
         // DANH SÁCH SÁCH
-        public ActionResult Index()
+        public ActionResult Index(int? page, string tuKhoa)
         {
-            var listSach = db.SACHes.OrderByDescending(s => s.NgayCapNhat).ToList();
-            return View(listSach);
+            int pageSize = 20;
+            int pageNumber = (page ?? 1);
+
+            ViewBag.TuKhoa = tuKhoa;
+
+            var listSach = db.SACHes.OrderByDescending(s => s.NgayCapNhat).AsQueryable();
+
+            if (!string.IsNullOrEmpty(tuKhoa))
+            {
+                listSach = listSach.Where(s => s.TenSach.Contains(tuKhoa));
+            }
+
+            return View(listSach.ToPagedList(pageNumber, pageSize));
         }
 
         // THÊM SÁCH
@@ -85,7 +97,7 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
             return View(sach);
         }
 
-        //SỬA SÁCH
+        // SỬA SÁCH
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult Edit(SACH sach, HttpPostedFileBase fFileUpload)

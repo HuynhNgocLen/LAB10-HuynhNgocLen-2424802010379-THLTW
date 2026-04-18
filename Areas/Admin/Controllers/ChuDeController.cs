@@ -1,4 +1,5 @@
-﻿using HuynhNgocLen.SachOnline.Models;
+using HuynhNgocLen.SachOnline.Models;
+using PagedList;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -8,9 +9,21 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
     {
         SachOnlineEntities1 db = new SachOnlineEntities1();
 
-        public ActionResult Index()
+        public ActionResult Index(int? page, string tuKhoa)
         {
-            return View(db.CHUDEs.ToList());
+            int pageSize = 15;
+            int pageNumber = (page ?? 1);
+
+            ViewBag.TuKhoa = tuKhoa;
+
+            var listChuDe = db.CHUDEs.AsQueryable();
+
+            if (!string.IsNullOrEmpty(tuKhoa))
+            {
+                listChuDe = listChuDe.Where(c => c.TenChuDe.Contains(tuKhoa));
+            }
+
+            return View(listChuDe.OrderBy(c => c.MaCD).ToPagedList(pageNumber, pageSize));
         }
 
         [HttpGet]

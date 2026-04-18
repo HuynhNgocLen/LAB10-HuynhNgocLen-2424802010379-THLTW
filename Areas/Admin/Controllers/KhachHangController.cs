@@ -1,4 +1,6 @@
 ﻿using HuynhNgocLen.SachOnline.Models;
+using PagedList;
+using System.Drawing.Printing;
 using System.Linq;
 using System.Web.Mvc;
 
@@ -9,10 +11,21 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
         SachOnlineEntities1 db = new SachOnlineEntities1();
 
         // DANH SÁCH KHÁCH HÀNG
-        public ActionResult Index()
+        public ActionResult Index(int? page, string tuKhoa)
         {
-            var listKH = db.KHACHHANGs.OrderByDescending(k => k.MaKH).ToList();
-            return View(listKH);
+            int pageSize = 20;
+            int pageNumber = (page ?? 1);
+
+            ViewBag.TuKhoa = tuKhoa;
+
+            var listKH = db.KHACHHANGs.AsQueryable();
+
+            if (!string.IsNullOrEmpty(tuKhoa))
+            {
+                listKH = listKH.Where(c => c.HoTen.Contains(tuKhoa));
+            }
+
+            return View(listKH.OrderBy(c => c.MaKH).ToPagedList(pageNumber, pageSize));
         }
 
         // THÊM KHÁCH HÀNG

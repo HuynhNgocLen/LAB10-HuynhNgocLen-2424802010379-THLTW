@@ -1,29 +1,44 @@
-﻿@model IEnumerable<HuynhNgocLen.SachOnline.Models.SACH>
+﻿@model PagedList.IPagedList<HuynhNgocLen.SachOnline.Models.SACH>
+@using PagedList.Mvc
+
 @{
     ViewBag.Title = "Quản lý Sách";
     ViewBag.ActiveMenu = "Sach";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-dark fw-semibold">Quản lý Sách</h2>
-        <a href="@Url.Action("Create", "Sach")" class="btn btn-primary shadow-sm">
+        <h2 class="text-dark fw-bold">Quản lý Sách</h2>
+        <a href="@Url.Action("Create", "Sach")" class="btn btn-primary rounded-3 shadow-sm px-4">
             <i class="bi bi-plus-lg"></i> Thêm sách mới
         </a>
     </div>
 
-    <div class="card shadow-sm border-0">
+    @using (Html.BeginForm("Index", "Sach", FormMethod.Get, new { @class = "mb-4" }))
+    {
+        <div class="input-group shadow-sm" style="max-width:450px;">
+            @Html.TextBox("tuKhoa", ViewBag.TuKhoa as string, new { @class = "form-control border-end-0", placeholder = "Tìm theo tên sách..." })
+            <button type="submit" class="btn btn-white bg-white border border-start-0 text-primary">
+                <i class="bi bi-search"></i> Tìm Kiếm
+            </button>
+                <a href="@Url.Action("Index")" class="btn btn-light border">Xóa lọc</a>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm rounded-3">
         <div class="card-body p-0">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
-                    <thead class="table-light">
-                        <tr>
-                            <th class="ps-4">Tên sách</th>
-                            <th>Ảnh bìa</th>
+                    <thead class="bg-light">
+                        <tr class="text-secondary">
+                            <th class="ps-4 py-3">Tên sách</th>
+                            <th class="text-center">Ảnh bìa</th>
                             <th class="text-end">Giá bán</th>
                             <th class="text-center">Số lượng</th>
-                            <th>Cập nhật</th>
+                            <th class="text-center">Cập nhật</th>
                             <th class="text-end pe-4">Hành động</th>
                         </tr>
                     </thead>
@@ -31,29 +46,30 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td class="ps-4 fw-medium">@item.TenSach</td>
-                                <td>
-                                    @if (!string.IsNullOrEmpty(item.AnhBia))
-                                    {
-                                        <img src="~/Images/@item.AnhBia"
-                                             class="rounded"
-                                             width="60"
-                                             style="object-fit: cover; height: 60px;"
-                                             alt="@item.TenSach" />
-                                    }
+                                <td class="ps-4 fw-bold text-dark" style="max-width: 300px;">
+                                    @item.TenSach
                                 </td>
-                                <td class="text-end fw-medium">@string.Format("{0:N0}", item.GiaBan) đ</td>
+                                <td class="text-center">
+                                    <img src="~/Images/@item.AnhBia" class="rounded shadow-sm" style="width:50px; height:70px; object-fit:cover;" />
+                                </td>
+                                <td class="text-end fw-bold">
+                                    @String.Format("{0:0,0}", item.GiaBan) <span class="small">₫</span>
+                                </td>
                                 <td class="text-center">@item.SoLuongBan</td>
-                                <td>@(item.NgayCapNhat.HasValue ? item.NgayCapNhat.Value.ToString("dd/MM/yyyy") : "—")</td>
+                                <td class="text-center text-muted">
+                                    @(item.NgayCapNhat.HasValue ? item.NgayCapNhat.Value.ToString("dd/MM/yyyy") : "")
+                                </td>
                                 <td class="text-end pe-4">
-                                    <a href="@Url.Action("Edit", "Sach", new { id = item.MaSach })"
-                                       class="btn btn-outline-primary btn-sm me-1">
-                                        <i class="bi bi-pencil"></i> Sửa
-                                    </a>
-                                    <a href="@Url.Action("Delete", "Sach", new { id = item.MaSach })"
-                                       class="btn btn-outline-danger btn-sm">
-                                        <i class="bi bi-trash"></i> Xóa
-                                    </a>
+                                    <div class="btn-group">
+                                        <a href="@Url.Action("Edit", "Sach", new { id = item.MaSach })"
+                                           class="btn btn-outline-primary btn-sm px-3 rounded-2 me-2">
+                                            <i class="bi bi-pencil"></i> Sửa
+                                        </a>
+                                        <a href="@Url.Action("Delete", "Sach", new { id = item.MaSach })"
+                                           class="btn btn-outline-danger btn-sm px-3 rounded-2">
+                                            <i class="bi bi-trash"></i> Xóa
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         }
@@ -61,5 +77,24 @@
                 </table>
             </div>
         </div>
+    </div>
+
+    <div class="mt-4 d-flex justify-content-between align-items-center">
+        <div class="text-muted">
+            Hiển thị trang <strong>@Model.PageNumber</strong> / @Model.PageCount
+            (Tổng <strong>@Model.TotalItemCount</strong> cuốn sách)
+        </div>
+
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, tuKhoa = ViewBag.TuKhoa }),
+            new PagedListRenderOptions
+            {
+                UlElementClasses = new[] { "pagination", "pagination-sm", "mb-0" },
+                LiElementClasses = new[] { "page-item" },
+                FunctionToTransformEachPageLink = (liTag, aTag) =>
+                {
+                    aTag.Attributes.Add("class", "page-link shadow-none");
+                    return liTag;
+                }
+            })
     </div>
 </div>
