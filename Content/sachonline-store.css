@@ -1,0 +1,234 @@
+/* SachOnline — giao diện cửa hàng (Bootstrap 5) */
+:root {
+    --so-bg: #f3f8ff;
+    --so-surface: #ffffff;
+    --so-ink: #1e293b;
+    --so-muted: #64748b;
+    --so-accent: #3b82f6;
+    --so-accent-hover: #2563eb;
+    --so-accent-soft: rgba(59, 130, 246, 0.14);
+    --so-radius: 14px;
+    --so-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+}
+
+body.store-body {
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--so-bg);
+    color: var(--so-ink);
+    min-height: 100vh;
+}
+
+/* Ghi đè Site.css — form full width trong cửa hàng */
+.store-shell input,
+.store-shell select,
+.store-shell textarea {
+    max-width: 100%;
+}
+
+.store-navbar {
+    background: var(--so-surface) !important;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, 0.06);
+}
+
+.store-navbar .navbar-brand {
+    font-weight: 700;
+    color: var(--so-accent) !important;
+    letter-spacing: -0.02em;
+}
+
+.store-navbar .nav-link {
+    font-weight: 500;
+    color: var(--so-ink) !important;
+}
+
+.store-navbar .nav-link:hover {
+    color: var(--so-accent) !important;
+}
+
+.store-main {
+    padding-bottom: 3rem;
+}
+
+.store-sidebar .card {
+    border-radius: var(--so-radius);
+    border: none;
+    box-shadow: var(--so-shadow);
+    overflow: hidden;
+}
+
+.store-sidebar .list-group-item {
+    border-color: rgba(15, 23, 42, 0.06);
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+}
+
+.store-sidebar .list-group-item:hover {
+    background: var(--so-accent-soft);
+    color: var(--so-accent);
+}
+
+.store-sidebar .list-group-item.active,
+.store-sidebar .so-side-head {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6) !important;
+    border: none;
+    color: #fff !important;
+    font-weight: 600;
+    text-align: center;
+}
+
+.book-card {
+    border-radius: var(--so-radius);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+}
+
+.book-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12) !important;
+}
+
+.book-card-img-wrap {
+    display: block;
+    background: #fff;
+    aspect-ratio: 4 / 5;
+    max-height: 280px;
+    overflow: hidden;
+}
+
+.book-card-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    transition: transform 0.2s ease;
+}
+
+.book-card:hover .book-card-img-wrap img {
+    transform: scale(1.015);
+}
+
+.book-card .card-title {
+    font-size: 1rem;
+    line-height: 1.35;
+    min-height: 2.7rem;
+}
+
+.book-card .card-title a {
+    color: var(--so-ink);
+}
+
+.book-card .card-title a:hover {
+    color: var(--so-accent);
+}
+
+.price-tag {
+    color: var(--so-accent);
+    font-weight: 700;
+    font-size: 1.05rem;
+}
+
+.store-footer {
+    background: #1e293b;
+    color: #cbd5e1;
+    margin-top: auto;
+}
+
+.store-footer a {
+    color: #e2e8f0;
+    text-decoration: none;
+}
+
+.store-footer a:hover {
+    color: #93c5fd;
+}
+
+.page-heading {
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--so-ink);
+}
+
+.breadcrumb-so {
+    background: transparent;
+    padding: 0;
+    margin-bottom: 1rem;
+}
+
+.pagination {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.pagination > li > a,
+.pagination > li > span {
+    border-radius: 8px !important;
+    margin: 0 2px;
+    border: 1px solid rgba(15, 23, 42, 0.1) !important;
+    color: var(--so-ink) !important;
+}
+
+.pagination > .active > a,
+.pagination > .active > span {
+    background: var(--so-accent) !important;
+    border-color: var(--so-accent) !important;
+}
+
+.btn-so-primary {
+    background: linear-gradient(135deg, #60a5fa, #3b82f6);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+}
+
+.btn-so-primary:hover {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    color: #fff;
+}
+
+.btn-back-top {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.25rem;
+    z-index: 1080;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: var(--so-surface);
+    color: var(--so-accent);
+    box-shadow: var(--so-shadow);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.btn-back-top.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.btn-back-top:hover {
+    transform: scale(1.05);
+    color: var(--so-accent-hover);
+}
+
+.carousel-hero {
+    border-radius: var(--so-radius);
+    overflow: hidden;
+    box-shadow: var(--so-shadow);
+}
+
+.carousel-hero .carousel-caption {
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    bottom: 1.5rem;
+}
+
+.so-auth-card {
+    max-width: 520px;
+    margin: 0 auto;
+}

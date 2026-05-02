@@ -1,32 +1,27 @@
 ﻿@using HuynhNgocLen.SachOnline.Models
-
 @{
-    KHACHHANG kh = (KHACHHANG)Session["TaiKhoan"];
+    Layout = null;
+    KHACHHANG kh = Session["TaiKhoan"] as KHACHHANG;
 }
 
-@if (Session["TaiKhoan"] == null)
+@if (kh == null)
 {
-    <li>
-        <a href="@Url.Action("DangKy", "User")">
-            <span class="glyphicon glyphicon-user"></span> Đăng ký
-        </a>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("DangKy", "User")"><i class="bi bi-person-plus"></i> Đăng ký</a>
     </li>
-    <li>
-        <a href="@Url.Action("DangNhap","User", new { url = Request.Url.ToString() })">
-            <span class="glyphicon glyphicon-log-in"></span> Đăng nhập
-        </a>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("DangNhap", "User", new { url = Request.Url?.ToString() })"><i class="bi bi-box-arrow-in-right"></i> Đăng nhập</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("Login", "Home", new { area = "Admin" })"><i class="bi bi-shield-lock"></i> Đăng nhập Admin</a>
     </li>
 }
 else
 {
-    <li>
-        <a href="#">
-            <span class="glyphicon glyphicon-user"></span> Xin chào: @kh.HoTen
-        </a>
+    <li class="nav-item d-flex align-items-center px-lg-2">
+        <span class="navbar-text small text-nowrap"><i class="bi bi-person-circle me-1"></i>@kh.HoTen</span>
     </li>
-    <li>
-        <a href="@Url.Action("DangXuat", "User")">
-            <span class="glyphicon glyphicon-log-out"></span> Đăng xuất
-        </a>
+    <li class="nav-item">
+        <a class="nav-link" href="@Url.Action("DangXuat", "User")"><i class="bi bi-box-arrow-right"></i> Đăng xuất</a>
     </li>
 }

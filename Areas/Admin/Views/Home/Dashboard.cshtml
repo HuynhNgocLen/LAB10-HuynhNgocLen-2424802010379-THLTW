@@ -2,46 +2,288 @@
     ViewBag.Title = "Dashboard Admin";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
     ViewBag.ActiveMenu = "Dashboard";
+    var years = ViewBag.AvailableYears as List<int> ?? new List<int>();
+    int selectedYear = ViewBag.SelectedYear ?? DateTime.Now.Year;
+    int? selectedMonth = ViewBag.SelectedMonth;
 }
 
-<h2 class="text-center text-primary" style="font-weight:bold; margin-top:20px;">THỐNG KÊ TỔNG QUAN</h2>
-<hr />
+<style>
+    .dashboard-title {
+        font-weight: 700;
+        color: #1f2a44;
+        margin-bottom: 4px;
+    }
 
-<div class="row text-center">
-    <div class="col-md-3">
-        <div class="panel panel-info">
-            <div class="panel-heading"><h3 class="panel-title">TỔNG ĐƠN HÀNG</h3></div>
-            <div class="panel-body">
-                <h2 style="color:#31708f">@ViewBag.TongDonHang</h2>
+    .dashboard-subtitle {
+        color: #6c757d;
+        margin-bottom: 20px;
+    }
+
+    .kpi-card {
+        border: 0;
+        border-radius: 14px;
+        box-shadow: 0 10px 24px rgba(13, 110, 253, 0.08);
+        height: 100%;
+    }
+
+    .kpi-label {
+        color: #6c757d;
+        font-size: 0.92rem;
+        margin-bottom: 6px;
+    }
+
+    .kpi-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin: 0;
+        color: #1f2a44;
+    }
+
+    .kpi-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+    <div>
+        <h2 class="dashboard-title">Tổng quan quản trị</h2>
+        <p class="dashboard-subtitle">
+            Theo dõi hiệu suất cửa hàng theo
+            @(selectedMonth.HasValue ? $"tháng {selectedMonth.Value} năm {selectedYear}" : $"năm {selectedYear}").
+        </p>
+    </div>
+    <span class="badge bg-primary-subtle text-primary-emphasis px-3 py-2">Cập nhật thời gian thực</span>
+</div>
+
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-body">
+        <form method="get" action="@Url.Action("Dashboard", "Home")" class="row g-3 align-items-end">
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label mb-1">Năm</label>
+                <select name="year" class="form-select">
+                    @foreach (var y in years)
+                    {
+                        <option value="@y" @(y == selectedYear ? "selected" : "")>@y</option>
+                    }
+                </select>
+            </div>
+            <div class="col-sm-6 col-md-3">
+                <label class="form-label mb-1">Tháng</label>
+                <select name="month" class="form-select">
+                    <option value="">Tất cả tháng</option>
+                    @for (int m = 1; m <= 12; m++)
+                    {
+                        <option value="@m" @(selectedMonth == m ? "selected" : "")>Tháng @m</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-6 d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-funnel me-1"></i>Lọc dữ liệu
+                </button>
+                <a href="@Url.Action("Dashboard", "Home")" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Đặt lại
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card kpi-card">
+            <div class="card-body d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="kpi-label">Tổng đơn hàng</p>
+                    <p class="kpi-value">@ViewBag.TongDonHang</p>
+                </div>
+                <div class="kpi-icon bg-info-subtle text-info">
+                    <i class="bi bi-receipt-cutoff"></i>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="panel panel-success">
-            <div class="panel-heading"><h3 class="panel-title">TỔNG DOANH THU</h3></div>
-            <div class="panel-body">
-                <h2 style="color:#3c763d">@string.Format("{0:#,##0}", ViewBag.TongDoanhThu) đ</h2>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card kpi-card">
+            <div class="card-body d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="kpi-label">Tổng doanh thu</p>
+                    <p class="kpi-value">@string.Format("{0:#,##0}", ViewBag.TongDoanhThu) đ</p>
+                </div>
+                <div class="kpi-icon bg-success-subtle text-success">
+                    <i class="bi bi-cash-coin"></i>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="panel panel-warning">
-            <div class="panel-heading"><h3 class="panel-title">KHÁCH HÀNG</h3></div>
-            <div class="panel-body">
-                <h2 style="color:#8a6d3b">@ViewBag.SoKhachHang</h2>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card kpi-card">
+            <div class="card-body d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="kpi-label">Khách hàng</p>
+                    <p class="kpi-value">@ViewBag.SoKhachHang</p>
+                </div>
+                <div class="kpi-icon bg-warning-subtle text-warning">
+                    <i class="bi bi-people"></i>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-md-3">
-        <div class="panel panel-danger">
-            <div class="panel-heading"><h3 class="panel-title">SỐ LƯỢNG SÁCH</h3></div>
-            <div class="panel-body">
-                <h2 style="color:#a94442">@ViewBag.SoSach</h2>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card kpi-card">
+            <div class="card-body d-flex justify-content-between align-items-start">
+                <div>
+                    <p class="kpi-label">Số lượng sách</p>
+                    <p class="kpi-value">@ViewBag.SoSach</p>
+                </div>
+                <div class="kpi-icon bg-danger-subtle text-danger">
+                    <i class="bi bi-book-half"></i>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="alert alert-info" style="margin-top:30px;">
-    Chào mừng bạn đến với trang quản trị <strong>SachOnline</strong>. Hãy chọn các mục ở menu phía trên để quản lý dữ liệu.
+<div class="row g-3">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white border-0 pt-4 pb-0">
+                <h5 class="mb-1">Doanh thu theo tháng (năm @ViewBag.ChartYear)</h5>
+                <small class="text-muted">Đơn vị: VND</small>
+            </div>
+            <div class="card-body">
+                <canvas id="revenueChart" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 mb-3">
+            <div class="card-header bg-white border-0 pt-4 pb-0">
+                <h5 class="mb-1">Số đơn theo tháng</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="orderChart" height="120"></canvas>
+            </div>
+        </div>
+        <div class="card border-0 shadow-sm rounded-4">
+            <div class="card-header bg-white border-0 pt-4 pb-0">
+                <h5 class="mb-1">Doanh thu theo năm</h5>
+                <small class="text-muted">5 năm gần nhất</small>
+            </div>
+            <div class="card-body">
+                <canvas id="yearRevenueChart" height="120"></canvas>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const monthLabels = @Html.Raw(Json.Encode(ViewBag.MonthLabels));
+        const orderData = @Html.Raw(Json.Encode(ViewBag.OrderData));
+        const revenueData = @Html.Raw(Json.Encode(ViewBag.RevenueData));
+        const yearLabels = @Html.Raw(Json.Encode(ViewBag.YearLabels));
+        const yearOrderData = @Html.Raw(Json.Encode(ViewBag.YearOrderData));
+        const yearRevenueData = @Html.Raw(Json.Encode(ViewBag.YearRevenueData));
+
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'line',
+            data: {
+                labels: monthLabels,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: revenueData,
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.15)',
+                    fill: true,
+                    tension: 0.3,
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        ticks: {
+                            callback: function (value) {
+                                return value.toLocaleString('vi-VN') + ' đ';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('orderChart'), {
+            type: 'bar',
+            data: {
+                labels: monthLabels,
+                datasets: [{
+                    label: 'Số đơn',
+                    data: orderData,
+                    borderRadius: 8,
+                    backgroundColor: '#20c997'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        new Chart(document.getElementById('yearRevenueChart'), {
+            type: 'bar',
+            data: {
+                labels: yearLabels,
+                datasets: [
+                    {
+                        label: 'Số đơn',
+                        data: yearOrderData,
+                        backgroundColor: 'rgba(32, 201, 151, 0.75)',
+                        borderRadius: 8,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Doanh thu',
+                        data: yearRevenueData,
+                        type: 'line',
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.2)',
+                        tension: 0.3,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: true }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: { display: true, text: 'Số đơn' }
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        position: 'right',
+                        grid: { drawOnChartArea: false },
+                        title: { display: true, text: 'Doanh thu (đ)' }
+                    }
+                }
+            }
+        });
+    </script>
+}

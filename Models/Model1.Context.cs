@@ -25,7 +25,7 @@ namespace HuynhNgocLen.SachOnline.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<ADMIN> ADMIN { get; set; }
+        public virtual DbSet<ADMIN> ADMINs { get; set; }
         public virtual DbSet<CHITIETDATHANG> CHITIETDATHANGs { get; set; }
         public virtual DbSet<CHUDE> CHUDEs { get; set; }
         public virtual DbSet<DONDATHANG> DONDATHANGs { get; set; }

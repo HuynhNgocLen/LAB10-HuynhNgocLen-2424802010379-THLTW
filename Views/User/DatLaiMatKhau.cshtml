@@ -1,0 +1,36 @@
+@{
+    ViewBag.Title = "Đặt lại mật khẩu";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<div class="so-auth-card py-3">
+    <h1 class="h3 page-heading text-center mb-4">Đặt lại mật khẩu</h1>
+    <p class="text-muted text-center small mb-3">Nhập mật khẩu mới cho tài khoản của bạn.</p>
+
+    @if (TempData["Info"] != null)
+    {
+        <div class="alert alert-success border-0 shadow-sm">@TempData["Info"]</div>
+    }
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            @using (Html.BeginForm("DatLaiMatKhau", "User", FormMethod.Post, new { @class = "needs-validation" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label class="form-label">Mật khẩu mới</label>
+                    <input type="password" name="MatKhau" class="form-control" autocomplete="new-password" required />
+                    <span class="text-danger small">@ViewData["Err1"]</span>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Nhập lại mật khẩu</label>
+                    <input type="password" name="MatKhauNL" class="form-control" autocomplete="new-password" required />
+                    <span class="text-danger small">@ViewData["Err2"]</span>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-so-primary btn-lg">Lưu mật khẩu mới</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

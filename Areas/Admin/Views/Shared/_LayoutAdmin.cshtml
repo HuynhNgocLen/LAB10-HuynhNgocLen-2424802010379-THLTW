@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="utf-8">
@@ -142,7 +142,7 @@
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="@Url.Action("Logout","Account")">Đăng xuất</a></li>
+                            <li><a class="dropdown-item text-danger" href="@Url.Action("Logout","Home", new { area = "Admin" })">Đăng xuất</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -153,6 +153,13 @@
     <!-- Main Content -->
     <div class="main-content pt-5 mt-4">
         <div class="container-fluid">
+            @if (TempData["ThongBaoAdmin"] != null)
+            {
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    @TempData["ThongBaoAdmin"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Đóng"></button>
+                </div>
+            }
             @RenderBody()
         </div>
     </div>

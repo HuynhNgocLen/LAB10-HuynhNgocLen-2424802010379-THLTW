@@ -1,0 +1,78 @@
+@using HuynhNgocLen.SachOnline.Security
+@{
+    ViewBag.Title = "Xác thực email";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+    var purpose = ViewBag.OtpPurpose as string;
+    var otpLen = OtpService.CodeLength;
+    var pattern = @"\d{" + otpLen + "}";
+}
+
+<div class="so-auth-card py-3">
+    <h1 class="h3 page-heading text-center mb-4">Nhập mã xác thực</h1>
+    <p class="text-muted text-center small mb-3">
+        Chúng tôi đã gửi mã <strong>@otpLen chữ số</strong> tới email của bạn.
+        @if (purpose == "register")
+        {
+            <span>Hoàn tất bước này để kích hoạt tài khoản.</span>
+        }
+        else if (purpose == "reset_password")
+        {
+            <span>Dùng mã để đặt lại mật khẩu.</span>
+        }
+    </p>
+
+    @if (TempData["Info"] != null)
+    {
+        <div class="alert alert-info border-0 shadow-sm">@TempData["Info"]</div>
+    }
+
+    @if (TempData["ThongBao"] != null)
+    {
+        <div class="alert alert-danger border-0 shadow-sm">@TempData["ThongBao"]</div>
+    }
+
+    @if (ViewBag.ThongBao != null)
+    {
+        <div class="alert alert-danger border-0 shadow-sm">@ViewBag.ThongBao</div>
+    }
+
+    @if (TempData["DevOtp"] != null)
+    {
+        <div class="alert alert-warning border-0 shadow-sm">
+            <strong>(Gỡ lỗi)</strong> Mã OTP khi chưa gửi được email: <code>@TempData["DevOtp"]</code>
+            @if (TempData["MailWarning"] != null)
+            {
+                <div class="small mt-1">@TempData["MailWarning"]</div>
+            }
+        </div>
+    }
+
+    @if (purpose != null)
+    {
+        <div class="card border-0 shadow-sm">
+            <div class="card-body p-4">
+                @using (Html.BeginForm("XacThucMa", "User", FormMethod.Post, new { @class = "needs-validation" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label class="form-label" for="MaXacThuc">Mã @otpLen số</label>
+                        <input type="text" name="MaXacThuc" id="MaXacThuc" class="form-control text-center fs-4" maxlength="@otpLen" pattern="@pattern" inputmode="numeric" autocomplete="one-time-code" placeholder="@(new string('0', otpLen))" required />
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-so-primary btn-lg">Xác nhận</button>
+                    </div>
+                }
+
+                @using (Html.BeginForm("GuiLaiMa", "User", FormMethod.Post, new { @class = "mt-3" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-link btn-sm w-100">Gửi lại mã</button>
+                }
+            </div>
+        </div>
+    }
+
+    <p class="text-center mt-3 small">
+        <a href="@Url.Action("DangNhap", "User")">Quay lại đăng nhập</a>
+    </p>
+</div>

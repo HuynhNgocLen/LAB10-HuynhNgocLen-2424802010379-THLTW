@@ -1,16 +1,13 @@
 ﻿@{
-    ViewBag.Title = "XacNhanDonHang";
+    ViewBag.Title = "Đặt hàng thành công";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
 }
 
-<h2>XÁC NHẬN ĐƠN HÀNG</h2>
-
-<h4>
-    Đơn hàng của quý khách đã được chúng tôi ghi nhận,
-    chúng tôi sẽ liên hệ quý khách trong thời gian sớm nhất
-    và giao hàng đúng hẹn
-</h4>
-
-<p>
-    @Html.ActionLink("VỀ TRANG CHỦ", "Index", "SachOnline")
-</p>
+<div class="text-center py-5">
+    <div class="mb-4 text-success display-4"><i class="bi bi-check-circle-fill"></i></div>
+    <h1 class="h3 page-heading mb-3">Đơn hàng đã được ghi nhận</h1>
+    <p class="text-secondary col-md-8 mx-auto mb-4">
+        Cảm ơn quý khách. Chúng tôi sẽ liên hệ trong thời gian sớm nhất và giao hàng đúng hẹn.
+    </p>
+    <a href="@Url.Action("Index", "SachOnline")" class="btn btn-so-primary btn-lg px-4"><i class="bi bi-house"></i> Về trang chủ</a>
+</div>

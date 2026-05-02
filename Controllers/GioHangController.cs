@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -29,10 +29,16 @@ namespace HuynhNgocLen.SachOnline.Controllers
             {
                 sp = new GioHang(ms);
                 lstCart.Add(sp);
+                TempData["CartToast"] = "Đã thêm \"" + sp.sTenSach + "\" vào giỏ hàng.";
             }
             else
             {
                 sp.iSoLuong++;
+                TempData["CartToast"] = "Đã cập nhật số lượng \"" + sp.sTenSach + "\" trong giỏ hàng.";
+            }
+            if (string.IsNullOrEmpty(url))
+            {
+                return RedirectToAction("Index", "SachOnline");
             }
             return Redirect(url);
         }
@@ -119,6 +125,20 @@ namespace HuynhNgocLen.SachOnline.Controllers
                     new { url = Request.Url.ToString() });
             }
 
+            var khSession = (KHACHHANG)Session["TaiKhoan"];
+            var khDb = db.KHACHHANGs.Find(khSession.MaKH);
+            if (khDb == null)
+            {
+                Session["TaiKhoan"] = null;
+                return RedirectToAction("DangNhap", "User");
+            }
+
+            if (!khDb.DaXacThucEmail)
+            {
+                TempData["Info"] = "Đặt hàng cần email đã xác thực. Vui lòng hoàn tất xác thực email (mã gửi về hộp thư đăng ký).";
+                return RedirectToAction("GuiLaiXacThucEmail", "User");
+            }
+
             List<GioHang> lstGioHang = LayGioHang();
             if (lstGioHang.Count == 0)
             {
@@ -142,8 +162,21 @@ namespace HuynhNgocLen.SachOnline.Controllers
                 return RedirectToAction("DangNhap", "User");
             }
 
+            var khDb = db.KHACHHANGs.Find(kh.MaKH);
+            if (khDb == null)
+            {
+                Session["TaiKhoan"] = null;
+                return RedirectToAction("DangNhap", "User");
+            }
+
+            if (!khDb.DaXacThucEmail)
+            {
+                TempData["Info"] = "Đặt hàng cần email đã xác thực. Vui lòng hoàn tất xác thực email.";
+                return RedirectToAction("GuiLaiXacThucEmail", "User");
+            }
+
             DONDATHANG ddh = new DONDATHANG();
-            ddh.MaKH = kh.MaKH;
+            ddh.MaKH = khDb.MaKH;
             ddh.NgayDat = DateTime.Now;
 
             var ngayGiao = f["NgayGiao"];

@@ -1,11 +1,13 @@
 ﻿@model IEnumerable<HuynhNgocLen.SachOnline.Models.CHUDE>
 
-<div class="list-group">
-    <a href="#" class="list-group-item active">DANH MỤC CHỦ ĐỀ</a>
-    @foreach (var cd in Model)
-    {
-        <a href="@Url.Action("SachTheoChuDe", "SachOnline", new { id = cd.MaCD })" class="list-group-item">
-            @cd.TenChuDe
-        </a>
-    }
+<div class="card store-sidebar">
+    <div class="so-side-head py-2 px-3 small text-uppercase">Chủ đề</div>
+    <div class="list-group list-group-flush">
+        @foreach (var cd in Model)
+        {
+            <a href="@Url.Action("SachTheoChuDe", "SachOnline", new { id = cd.MaCD })" class="list-group-item list-group-item-action">
+                @cd.TenChuDe
+            </a>
+        }
+    </div>
 </div>

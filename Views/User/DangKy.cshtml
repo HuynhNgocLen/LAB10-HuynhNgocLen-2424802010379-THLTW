@@ -1,71 +1,68 @@
-@model HuynhNgocLen.SachOnline.Models.KHACHHANG
+﻿@model HuynhNgocLen.SachOnline.Models.KHACHHANG
 @{
     ViewBag.Title = "Đăng ký";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
 }
-<h2 class="text-center">DANG KY</h2>
-<div style="color:red; text-align:center">@ViewBag.ThongBao</div>
 
-<table align="center">
-    @using (Html.BeginForm())
+<div class="so-auth-card py-3">
+    <h1 class="h3 page-heading text-center mb-4">Đăng ký tài khoản</h1>
+
+    @if (ViewBag.ThongBao != null)
     {
-        @Html.ValidationSummary(true)
-        <tr style="height:40px">
-            <td>Ho ten:</td>
-            <td>
-                <input type="text" name="HoTen" value="@Request.Form["HoTen"]" />
-                <span style="color:red">@ViewData["err1"]</span>
-            </td>
-        </tr>
-        <tr style="height:40px">
-            <td>Ten dang nhap:</td>
-            <td>
-                <input type="text" name="TenDN" value="@Request.Form["TenDN"]" />
-                <span style="color:red">@ViewData["err2"]</span>
-            </td>
-        </tr>
-        <tr style="height:40px">
-            <td>Mat Khau:</td>
-            <td>
-                <input type="password" name="MatKhau" />
-                <span style="color:red">@ViewData["err3"]</span>
-            </td>
-        </tr>
-        <tr style="height:40px">
-            <td>Nhap lai mat khau:</td>
-            <td>
-                <input type="password" name="MatKhauNL" />
-                <span style="color:red">@ViewData["err4"]</span>
-            </td>
-        </tr>
-        <tr style="height:40px">
-            <td>Email:</td>
-            <td>
-                <input type="email" name="Email" value="@Request.Form["Email"]" />
-                <span style="color:red">@ViewData["err5"]</span>
-            </td>
-        </tr>
-        <tr style="height:40px">
-            <td>Dien thoai:</td>
-            <td>
-                <input type="text" name="DienThoai" value="@Request.Form["DienThoai"]" />
-                <span style="color:red">@ViewData["err6"]</span>
-            </td>
-        </tr>
-        <tr style="height:40px">
-            <td>Dia chi:</td>
-            <td><input type="text" name="DiaChi" value="@Request.Form["DiaChi"]" /></td>
-        </tr>
-        <tr style="height:40px">
-            <td>Ngay sinh:</td>
-            <td><input type="date" name="NgaySinh" value="@Request.Form["NgaySinh"]" /></td>
-        </tr>
-        <tr style="height:40px">
-            <td></td>
-            <td>
-                <input type="submit" value="Dang ky" class="btn btn-secondary border-dark" />
-                <input type="reset" value="Xoa noi dung" class="btn btn-secondary border-dark" />
-            </td>
-        </tr>
+        <div class="alert alert-warning border-0 shadow-sm">@ViewBag.ThongBao</div>
     }
-</table>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            @using (Html.BeginForm())
+            {
+                @Html.ValidationSummary(true, "", new { @class = "text-danger small mb-3" })
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Họ tên</label>
+                        <input type="text" name="HoTen" class="form-control" value="@Request.Form["HoTen"]" maxlength="100" />
+                        <span class="text-danger small">@ViewData["err1"]</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Tên đăng nhập</label>
+                        <input type="text" name="TenDN" class="form-control" value="@Request.Form["TenDN"]" autocomplete="username" maxlength="50" />
+                        <span class="text-danger small">@ViewData["err2"]</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Mật khẩu</label>
+                        <input type="password" name="MatKhau" class="form-control" autocomplete="new-password" />
+                        <span class="text-danger small">@ViewData["err3"]</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Nhập lại mật khẩu</label>
+                        <input type="password" name="MatKhauNL" class="form-control" autocomplete="new-password" />
+                        <span class="text-danger small">@ViewData["err4"]</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" name="Email" class="form-control" value="@Request.Form["Email"]" maxlength="100" />
+                        <span class="text-danger small">@ViewData["err5"]</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Điện thoại</label>
+                        <input type="text" name="DienThoai" class="form-control" value="@Request.Form["DienThoai"]" maxlength="20" inputmode="numeric" />
+                        <span class="text-danger small">@ViewData["err6"]</span>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Địa chỉ</label>
+                        <input type="text" name="DiaChi" class="form-control" value="@Request.Form["DiaChi"]" maxlength="200" />
+                        <span class="text-danger small">@ViewData["errDiaChi"]</span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Ngày sinh</label>
+                        <input type="date" name="NgaySinh" class="form-control" value="@Request.Form["NgaySinh"]" />
+                    </div>
+                </div>
+                <div class="d-flex flex-wrap gap-2 justify-content-center mt-4">
+                    <button type="submit" class="btn btn-so-primary px-4">Đăng ký</button>
+                    <button type="reset" class="btn btn-outline-secondary">Xóa nội dung</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

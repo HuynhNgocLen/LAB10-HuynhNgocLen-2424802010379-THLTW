@@ -1,14 +1,13 @@
 ﻿@model IEnumerable<HuynhNgocLen.SachOnline.Models.NHAXUATBAN>
 
-<ul class="list-group">
-    <li class="list-group-item active" style="font-weight:bold; text-align:center">
-        SÁCH THEO NHÀ XUẤT BẢN
-    </li>
-    @foreach (var nxb in Model)
-    {
-        <a href="@Url.Action("SachTheoNXB", "SachOnline", new { id = nxb.MaNXB })"
-           class="list-group-item">
-            @nxb.TenNXB
-        </a>
-    }
-</ul>
+<div class="card store-sidebar">
+    <div class="so-side-head py-2 px-3 small text-uppercase">Nhà xuất bản</div>
+    <div class="list-group list-group-flush">
+        @foreach (var nxb in Model)
+        {
+            <a href="@Url.Action("SachTheoNXB", "SachOnline", new { id = nxb.MaNXB })" class="list-group-item list-group-item-action">
+                @nxb.TenNXB
+            </a>
+        }
+    </div>
+</div>

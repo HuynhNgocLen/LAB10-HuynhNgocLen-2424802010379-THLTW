@@ -67,5 +67,33 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
             }
             return View(chude);
         }
+
+        [HttpGet]
+        public ActionResult Delete(int id)
+        {
+            var cd = db.CHUDEs.SingleOrDefault(c => c.MaCD == id);
+            if (cd == null) return HttpNotFound();
+            return View(cd);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult ConfirmDelete(int id)
+        {
+            var cd = db.CHUDEs.SingleOrDefault(c => c.MaCD == id);
+            if (cd == null) return RedirectToAction("Index");
+
+            try
+            {
+                db.CHUDEs.Remove(cd);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                ModelState.AddModelError("", "Không thể xóa chủ đề vì đang có dữ liệu liên quan.");
+                return View(cd);
+            }
+        }
     }
 }

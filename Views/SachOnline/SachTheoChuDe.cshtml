@@ -1,76 +1,42 @@
 ﻿@using HuynhNgocLen.SachOnline.Models
 @using PagedList.Mvc;
-
 @model PagedList.PagedList<SACH>
-
 @{
-    ViewBag.Title = "SÁCH THEO CHỦ ĐỀ";
+    ViewBag.Title = "Sách theo ch? ??";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
 }
 
-<style type="text/css">
-    .imgbook {
-        transition: all 0.5s ease-in;
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-    }
+<nav aria-label="breadcrumb" class="breadcrumb-so">
+    <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><a href="@Url.Action("Index", "SachOnline")">Trang chủ</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@ViewBag.CD</li>
+    </ol>
+</nav>
 
-        .imgbook:hover {
-            transform: scale(0.9);
-            cursor: pointer;
-        }
-</style>
+<h1 class="h3 page-heading text-center mb-4">Sách theo chủ đề: @ViewBag.CD</h1>
 
-<h2 class="text-center">SACH THEO CHU DE</h2>
-<hr>
-
-<div class="row text-center">
+<div class="row">
     @if (Model != null && Model.Any())
     {
         foreach (var sach in Model)
         {
-            <div class="col-sm-4 col-md-4 col-lg-4 col-xs-6">
-                <div class="thumbnail">
-                    <a href="@Url.Action("ChiTietSach", "SachOnline", new { id = sach.MaSach })">
-                        <img src="~/Images/@sach.AnhBia" alt="@sach.TenSach" class="img-responsive img-rounded imgbook">
-                    </a>
-                    <div class="caption">
-                        <h4 style="min-height:70px;">
-                            <a href="@Url.Action("ChiTietSach", "SachOnline", new { id = sach.MaSach })">@sach.TenSach</a>
-                        </h4>
-                        <p>Giá: <span style="color:red; font-weight:bold">@String.Format("{0:0,0}", sach.GiaBan) VNĐ</span></p>
-
-                        <p>
-                            <a href="@Url.Action("ThemGioHang","GioHang", new { ms = sach.MaSach, url = Request.Url.ToString() })" class="btn btn-primary" role="button">
-                                <span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Add to Cart
-                            </a>
-                        </p>
-                    </div>
-                </div>
-            </div>
+            @Html.Partial("_SachCard", sach)
         }
     }
     else
     {
-        <div class="alert alert-info">Hiện chưa có sách nào thuộc chủ đề này.</div>
+        <div class="col-12">
+            <div class="alert alert-info border-0 shadow-sm">Hiện chưa có sách nào theo chủ đề này.</div>
+        </div>
     }
 </div>
 
-<div class="MenuTrang">
-    Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
-    @Html.PagedListPager(Model, page => Url.Action("SachTheoChuDe", new
-    {
-        id = ViewBag.MaCD,
-        page = page
-    }))
+<div class="d-flex flex-column align-items-center gap-2 mt-4">
+    <span class="text-secondary small">
+        Trang @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) / @Model.PageCount
+    </span>
+    @Html.PagedListPager(Model, page => Url.Action("SachTheoChuDe", new { id = ViewBag.MaCD, page = page }))
 </div>
-<style>
-    .MenuTrang {
-        display: inline;
-        text-align: center;
-    }
-</style>
 
 @section SachBanNhieu{
     @Html.Action("SachBanNhieuPartial", "SachOnline")

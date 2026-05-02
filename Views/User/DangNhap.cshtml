@@ -4,47 +4,41 @@
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
 }
 
-<h2 class="text-center text-primary mb-4">ĐĂNG NHẬP</h2>
+<div class="so-auth-card py-3">
+    <h1 class="h3 page-heading text-center mb-4">Đăng nhập</h1>
 
-@if (ViewBag.ThongBao != null)
-{
-    <h4 style="color:red; text-align:center"><strong>@ViewBag.ThongBao</strong></h4>
-}
-
-<table align="center">
-    @using (Html.BeginForm("DangNhap", "User",
-    new { url = ViewBag.Url }, FormMethod.Post))
+    @if (TempData["Info"] != null)
     {
-        @Html.ValidationSummary(true)
-
-        <tr style="height:40px">
-            <td class="fw-bold">Tên đăng nhập:</td>
-            <td>
-                @Html.TextBox("TenDN", null, new { @class = "form-control", @placeholder = "Nhập tên đăng nhập" })
-                <span class="text-danger small italic">@ViewData["Err1"]</span>
-            </td>
-        </tr>
-
-        <tr style="height:40px">
-            <td class="fw-bold">Mật khẩu:</td>
-            <td>
-                @Html.Password("MatKhau", null, new { @class = "form-control", @placeholder = "Nhập mật khẩu" })
-                <span class="text-danger small italic">@ViewData["Err2"]</span>
-            </td>
-        </tr>
-
-        <tr style="height:60px">
-            <td></td>
-            <td>
-                <button type="submit" class="btn btn-primary btn-lg">Đăng nhập</button>
-            </td>
-        </tr>
-
-        <tr>
-            <td></td>
-            <td>
-                <a href="@Url.Action("DangKy", "User")" class="text-decoration-none">Chưa có tài khoản? Đăng ký ngay</a>
-            </td>
-        </tr>
+        <div class="alert alert-success border-0 shadow-sm">@TempData["Info"]</div>
     }
-</table>
+
+    @if (ViewBag.ThongBao != null)
+    {
+        <div class="alert alert-danger border-0 shadow-sm">@ViewBag.ThongBao</div>
+    }
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            @using (Html.BeginForm("DangNhap", "User", new { url = ViewBag.Url }, FormMethod.Post, new { @class = "needs-validation" }))
+            {
+                @Html.ValidationSummary(true, "", new { @class = "text-danger small mb-3" })
+                <div class="mb-3">
+                    <label class="form-label">Tên đăng nhập</label>
+                    @Html.TextBox("TenDN", null, new { @class = "form-control", @placeholder = "Nhập tên đăng nhập", autocomplete = "username", required = "required" })
+                    <span class="text-danger small">@ViewData["Err1"]</span>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Mật khẩu</label>
+                    @Html.Password("MatKhau", null, new { @class = "form-control", @placeholder = "Nhập mật khẩu", autocomplete = "current-password", required = "required" })
+                    <span class="text-danger small">@ViewData["Err2"]</span>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-so-primary btn-lg">Đăng nhập</button>
+                    <a href="@Url.Action("GuiLaiXacThucEmail", "User")" class="btn btn-link small">Chưa xác thực email? Gửi lại mã</a>
+                    <a href="@Url.Action("QuenMatKhau", "User")" class="btn btn-link small">Quên mật khẩu?</a>
+                    <a href="@Url.Action("DangKy", "User")" class="btn btn-link">Chưa có tài khoản? Đăng ký ngay</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

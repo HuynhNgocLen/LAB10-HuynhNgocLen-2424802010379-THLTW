@@ -1,0 +1,23 @@
+﻿@model HuynhNgocLen.SachOnline.Models.SACH
+@{
+    var detailUrl = Url.Action("ChiTietSach", "SachOnline", new { id = Model.MaSach });
+    var cartUrl = Url.Action("ThemGioHang", "GioHang", new { ms = Model.MaSach, url = Request.Url != null ? Request.Url.ToString() : "" });
+}
+<div class="col-6 col-md-4 mb-4">
+    <div class="card h-100 book-card border-0 shadow-sm">
+        <a href="@detailUrl" class="book-card-img-wrap">
+            <img src="@Url.Content("~/Images/" + Model.AnhBia)" alt="@Model.TenSach" />
+        </a>
+        <div class="card-body d-flex flex-column">
+            <div class="card-title h6 mb-2">
+                <a href="@detailUrl" class="text-decoration-none">@Model.TenSach</a>
+            </div>
+            <p class="price-tag mb-3">@String.Format("{0:#,##0}", Model.GiaBan) đ</p>
+            <div class="mt-auto d-grid gap-2">
+                <a href="@cartUrl" class="btn btn-so-primary btn-sm">
+                    <i class="bi bi-cart-plus"></i> Thêm vào giỏ
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

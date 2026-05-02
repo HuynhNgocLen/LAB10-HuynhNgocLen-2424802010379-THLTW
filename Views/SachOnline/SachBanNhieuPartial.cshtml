@@ -1,18 +1,21 @@
-﻿@model IEnumerable<HuynhNgocLen.SachOnline.Models.SACH>
+@model IEnumerable<HuynhNgocLen.SachOnline.Models.SACH>
 
-<h2 class="text-center">SÁCH BÁN NHIỀU</h2>
-<hr>
-<div class="row text-center">
-    @foreach (var sach in Model)
-    {
-        <div class="col-xs-6 col-sm-6 col-md-4 col-lg-4">
-            <div class="thumbnail" style="height: 350px; margin-bottom: 20px;">
-                <img src="~/Images/@sach.AnhBia" style="height:200px; width:auto; max-width:100%; object-fit:cover;">
-                <div class="caption">
-                    <h5 style="height: 60px; overflow: hidden; margin-top: 10px;">@sach.TenSach</h5>
-                    <p style="margin-bottom: 10px;"><strong>Đã bán: @sach.SoLuongBan</strong></p>
+<section class="pb-4" aria-labelledby="sec-ban-chay">
+    <h2 id="sec-ban-chay" class="h4 page-heading text-center mb-4">Sách bán chạy</h2>
+    <div class="row g-3 justify-content-center">
+        @foreach (var sach in Model)
+        {
+            <div class="col-6 col-md-4 col-lg-2">
+                <div class="card h-100 book-card border-0 shadow-sm text-center">
+                    <a href="@Url.Action("ChiTietSach", "SachOnline", new { id = sach.MaSach })" class="book-card-img-wrap" style="aspect-ratio: 3/4; max-height: 200px;">
+                        <img src="@Url.Content("~/Images/" + sach.AnhBia)" alt="@sach.TenSach" />
+                    </a>
+                    <div class="card-body p-2">
+                        <a href="@Url.Action("ChiTietSach", "SachOnline", new { id = sach.MaSach })" class="small text-decoration-none text-body fw-semibold d-block text-truncate" title="@sach.TenSach">@sach.TenSach</a>
+                        <span class="badge bg-secondary bg-opacity-25 text-dark mt-2">Đã bán: @(sach.SoLuongBan ?? 0)</span>
+                    </div>
                 </div>
             </div>
-        </div>
-    }
-</div>
+        }
+    </div>
+</section>

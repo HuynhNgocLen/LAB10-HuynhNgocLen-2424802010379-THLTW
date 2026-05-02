@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -113,7 +113,31 @@ namespace SachOnline.Controllers
             {
                 return HttpNotFound();
             }
+
+            if (sach.MaCD.HasValue)
+            {
+                ViewBag.SachLienQuan = db.SACHes
+                    .Where(s => s.MaCD == sach.MaCD && s.MaSach != id)
+                    .OrderByDescending(s => s.NgayCapNhat)
+                    .Take(4)
+                    .ToList();
+            }
+            else
+            {
+                ViewBag.SachLienQuan = new List<SACH>();
+            }
+
             return View(sach);
+        }
+
+        public ActionResult GioiThieu()
+        {
+            return View();
+        }
+
+        public ActionResult LienHe()
+        {
+            return View();
         }
 
         //10. LoginLogout Partial View
@@ -128,15 +152,17 @@ namespace SachOnline.Controllers
         {
             int size = 6;
 
-            if (string.IsNullOrEmpty(data))
+            if (string.IsNullOrWhiteSpace(data))
                 return RedirectToAction("Index");
 
+            data = data.Trim();
             var kq = db.SACHes
-                       .Where(s => s.TenSach.Contains(data))
+                       .Where(s => s.TenSach != null && s.TenSach.Contains(data))
                        .OrderByDescending(s => s.NgayCapNhat)
                        .ToList();
 
             ViewBag.TuKhoa = data;
+            ViewBag.SoKetQua = kq.Count;
             return View(kq.ToPagedList(page, size));
         }
     }

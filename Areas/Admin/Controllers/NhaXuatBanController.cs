@@ -86,15 +86,23 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
 
         // XÓA NXB
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public ActionResult ConfirmDelete(int id)
         {
             var nxb = db.NHAXUATBANs.SingleOrDefault(n => n.MaNXB == id);
-            if (nxb != null)
+            if (nxb == null) return RedirectToAction("Index");
+
+            try
             {
                 db.NHAXUATBANs.Remove(nxb);
                 db.SaveChanges();
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            catch
+            {
+                ModelState.AddModelError("", "Không thể xóa nhà xuất bản vì đang có dữ liệu liên quan.");
+                return View(nxb);
+            }
         }
     }
 }

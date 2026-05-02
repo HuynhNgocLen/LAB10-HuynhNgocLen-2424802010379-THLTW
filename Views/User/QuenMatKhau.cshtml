@@ -1,0 +1,43 @@
+@using HuynhNgocLen.SachOnline.Security
+@{
+    ViewBag.Title = "Quên mật khẩu";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<div class="so-auth-card py-3">
+    <h1 class="h3 page-heading text-center mb-4">Quên mật khẩu</h1>
+    <p class="text-muted text-center small mb-3">
+        Nhập <strong>tên đăng nhập</strong> hoặc <strong>email</strong>. Chúng tôi gửi mã <strong>@OtpService.CodeLength số</strong> để bạn đặt lại mật khẩu.
+    </p>
+
+    @if (TempData["Info"] != null)
+    {
+        <div class="alert alert-info border-0 shadow-sm">@TempData["Info"]</div>
+    }
+
+    @if (ViewBag.ThongBao != null)
+    {
+        <div class="alert alert-warning border-0 shadow-sm">@ViewBag.ThongBao</div>
+    }
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            @using (Html.BeginForm("QuenMatKhau", "User", FormMethod.Post, new { @class = "needs-validation" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label class="form-label" for="TenDNHoacEmail">Tên đăng nhập hoặc email</label>
+                    <input type="text" name="TenDNHoacEmail" id="TenDNHoacEmail" class="form-control" value="@Request.Form["TenDNHoacEmail"]" autocomplete="username" required />
+                    <span class="text-danger small">@ViewData["Err1"]</span>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-so-primary btn-lg">Gửi mã qua email</button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <p class="text-center mt-3 small">
+        <a href="@Url.Action("DangNhap", "User")">Quay lại đăng nhập</a>
+    </p>
+</div>

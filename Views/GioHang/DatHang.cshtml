@@ -1,84 +1,82 @@
 ﻿@using HuynhNgocLen.SachOnline.Models
-@model IEnumerable<HuynhNgocLen.SachOnline.Models.GioHang>
-
+@model IEnumerable<GioHang>
 @{
-    ViewBag.Title = "ĐƠN ĐẶT HÀNG";
+    ViewBag.Title = "Đặt hàng";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
-}
-
-<h2 style="text-align:center; margin-top: 20px;">THÔNG TIN ĐƠN HÀNG</h2>
-<table align="center" border="1" style="width:80%; border-collapse: collapse;">
-    <tr style="text-align:center; font-weight:bold; background-color: #f2f2f2;">
-        <td>Mã Sách</td>
-        <td>Tên Sách</td>
-        <td>Ảnh Bìa</td>
-        <td>Số Lượng</td>
-        <td>Đơn Giá</td>
-        <td>Thành Tiền</td>
-    </tr>
-    @foreach (var item in Model)
-    {
-        <tr style="text-align:center;">
-            <td>@item.iMaSach</td>
-            <td style="text-align:left; padding-left: 10px;">@item.sTenSach</td>
-            <td><img src="~/Images/@item.sAnhBia" style="width:80px; padding: 5px;"></td>
-            <td>@item.iSoLuong</td>
-            <td>@string.Format("{0:#,##0}", item.dDonGia) đ</td>
-            <td>@string.Format("{0:#,##0}", item.dThanhTien) đ</td>
-        </tr>
-    }
-    <tr style="font-weight:bold; color:red;">
-        <td colspan="3" style="text-align:right; padding-right:10px;">
-            Số lượng sách: @ViewBag.TongSoLuong
-        </td>
-        <td colspan="3" style="text-align:center;">
-            Tổng tiền: @string.Format("{0:#,##0}", ViewBag.TongTien) VNĐ
-        </td>
-    </tr>
-    <tr style="font-weight:bold; text-align:right;">
-        <td colspan="6" style="padding: 10px;">
-            @Html.ActionLink("TRỞ VỀ GIỎ HÀNG", "GioHang", "GioHang", null, new { @class = "btn btn-default" })
-        </td>
-    </tr>
-</table>
-
-<hr />
-
-<h2 style="text-align:center">THÔNG TIN ĐẶT HÀNG</h2>
-@{
     KHACHHANG kh = (KHACHHANG)Session["TaiKhoan"];
 }
-<table align="center" style="width: 50%;">
-    @using (Html.BeginForm())
-    {
-        @Html.ValidationSummary(true)
-        <tr style="height:40px;">
-            <td>Họ tên khách hàng:</td>
-            <td style="font-weight:bold">@kh.HoTen</td>
-        </tr>
-        <tr style="height:40px;">
-            <td>Địa chỉ:</td>
-            <td style="font-weight:bold">@kh.DiaChi</td>
-        </tr>
-        <tr style="height:40px;">
-            <td>Điện thoại:</td>
-            <td style="font-weight:bold">@kh.DienThoai</td>
-        </tr>
-        <tr style="height:40px;">
-            <td>Ngày đặt:</td>
-            <td style="font-weight:bold">@DateTime.Now.ToString("dd/MM/yyyy")</td>
-        </tr>
-        <tr style="height:40px;">
-            <td>Ngày giao:</td>
-            <td>
-                <input type="date" name="NgayGiao" class="form-control" required />
-            </td>
-        </tr>
-        <tr style="height:50px;">
-            <td></td>
-            <td>
-                <input type="submit" value="XÁC NHẬN ĐẶT HÀNG" class="btn btn-primary" style="background-color: orange; border: none; padding: 10px 20px; color: white; cursor: pointer; font-weight: bold;" />
-            </td>
-        </tr>
-    }
-</table>
+
+<h1 class="h3 page-heading text-center mb-4">Xác nhận đơn hàng</h1>
+
+<div class="card border-0 shadow-sm mb-4">
+    <div class="card-header bg-white fw-semibold py-3">Sản phẩm</div>
+    <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0">
+            <thead class="table-light small text-uppercase text-secondary">
+                <tr class="text-center">
+                    <th>Mã</th>
+                    <th class="text-start">Tên sách</th>
+                    <th>Ảnh</th>
+                    <th>SL</th>
+                    <th>Đơn giá</th>
+                    <th>Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="text-center">
+                        <td>@item.iMaSach</td>
+                        <td class="text-start">@item.sTenSach</td>
+                        <td><img src="@Url.Content("~/Images/" + item.sAnhBia)" alt="" class="rounded" style="width: 56px; height: 72px; object-fit: cover;" /></td>
+                        <td>@item.iSoLuong</td>
+                        <td class="text-end">@string.Format("{0:#,##0}", item.dDonGia) đ</td>
+                        <td class="text-end fw-semibold">@string.Format("{0:#,##0}", item.dThanhTien) đ</td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot class="table-light">
+                <tr>
+                    <td colspan="6" class="text-end py-3">
+                        <span class="me-3">Số lượng: <strong>@ViewBag.TongSoLuong</strong></span>
+                        <span>Tổng tiền: <span class="price-tag fs-5">@string.Format("{0:#,##0}", ViewBag.TongTien) đ</span></span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="card-footer bg-white text-end">
+        <a href="@Url.Action("GioHang", "GioHang")" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> Về giỏ hàng</a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white fw-semibold py-3">Thông tin giao hàng</div>
+            <div class="card-body">
+                @using (Html.BeginForm())
+                {
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger small mb-3" })
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Họ tên</dt>
+                        <dd class="col-sm-8 fw-semibold">@kh.HoTen</dd>
+                        <dt class="col-sm-4">Địa chỉ</dt>
+                        <dd class="col-sm-8">@kh.DiaChi</dd>
+                        <dt class="col-sm-4">Điện thoại</dt>
+                        <dd class="col-sm-8">@kh.DienThoai</dd>
+                        <dt class="col-sm-4">Ngày đặt</dt>
+                        <dd class="col-sm-8">@DateTime.Now.ToString("dd/MM/yyyy")</dd>
+                        <dt class="col-sm-4">Ngày giao mong muốn</dt>
+                        <dd class="col-sm-8">
+                            <input type="date" name="NgayGiao" class="form-control" required />
+                        </dd>
+                    </dl>
+                    <div class="text-center mt-4">
+                        <button type="submit" class="btn btn-so-primary btn-lg px-5"><i class="bi bi-check2-circle"></i> Xác nhận đặt hàng</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

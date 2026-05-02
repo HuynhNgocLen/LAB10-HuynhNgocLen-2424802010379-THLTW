@@ -1,6 +1,14 @@
-﻿<li>
-    <a href="@Url.Action("GioHang","GioHang")">
-        <span class="glyphicon glyphicon-shopping-cart"></span>
-        Giỏ hàng (@ViewBag.TongSoLuong)
+﻿@{
+    Layout = null;
+    int n = ViewBag.TongSoLuong != null ? (int)ViewBag.TongSoLuong : 0;
+}
+<li class="nav-item">
+    <a class="nav-link position-relative" href="@Url.Action("GioHang", "GioHang")" title="Giỏ hàng">
+        <i class="bi bi-cart3 fs-5"></i>
+        @if (n > 0)
+        {
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">@n</span>
+        }
+        <span class="d-none d-xl-inline ms-1">Giỏ hàng</span>
     </a>
 </li>

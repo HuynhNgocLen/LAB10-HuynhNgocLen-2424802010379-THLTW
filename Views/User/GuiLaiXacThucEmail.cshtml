@@ -1,0 +1,45 @@
+@using HuynhNgocLen.SachOnline.Security
+@{
+    ViewBag.Title = "G?i l?i mã xác th?c email";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<div class="so-auth-card py-3">
+    <h1 class="h3 page-heading text-center mb-4">G?i l?i mã xác th?c email</h1>
+    <p class="text-muted text-center small mb-3">
+        Nh?p <strong>tên ??ng nh?p</strong> ho?c <strong>email</strong> ?ã dùng khi ??ng ký. H? th?ng s? g?i mã <strong>@OtpService.CodeLength s?</strong> t?i email c?a tài kho?n ?? b?n kích ho?t.
+    </p>
+
+    @if (TempData["Info"] != null)
+    {
+        <div class="alert alert-success border-0 shadow-sm">@TempData["Info"]</div>
+    }
+
+    @if (ViewBag.ThongBao != null)
+    {
+        <div class="alert alert-warning border-0 shadow-sm">@ViewBag.ThongBao</div>
+    }
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            @using (Html.BeginForm("GuiLaiXacThucEmail", "User", FormMethod.Post, new { @class = "needs-validation" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="mb-3">
+                    <label class="form-label" for="TenDNHoacEmail">Tên ??ng nh?p ho?c email</label>
+                    <input type="text" name="TenDNHoacEmail" id="TenDNHoacEmail" class="form-control" value="@Request.Form["TenDNHoacEmail"]" placeholder="Ví d?: nguyenvana ho?c email@example.com" autocomplete="username" required />
+                    <span class="text-danger small">@ViewData["Err1"]</span>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-so-primary btn-lg">G?i mã xác th?c</button>
+                </div>
+            }
+        </div>
+    </div>
+
+    <p class="text-center mt-3 small">
+        <a href="@Url.Action("DangNhap", "User")">Quay l?i ??ng nh?p</a>
+        &nbsp;·&nbsp;
+        <a href="@Url.Action("DangKy", "User")">??ng ký tài kho?n m?i</a>
+    </p>
+</div>
