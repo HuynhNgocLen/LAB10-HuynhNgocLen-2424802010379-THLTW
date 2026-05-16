@@ -1,0 +1,130 @@
+@model IEnumerable<HuynhNgocLen.SachOnline.Models.DONDATHANG>
+@{
+    ViewBag.Title = "Lịch sử đơn hàng";
+    Layout = "~/Views/Shared/_LayoutUser.cshtml";
+}
+
+<div class="container py-5">
+    <div class="d-flex align-items-center mb-4">
+        <div class="bg-primary text-white rounded-circle p-3 me-3">
+            <i class="bi bi-box-seam fs-4"></i>
+        </div>
+        <div>
+            <h2 class="fw-bold mb-0">Lịch sử đơn hàng</h2>
+            <p class="text-muted mb-0">Theo dõi trạng thái các đơn hàng của bạn</p>
+        </div>
+    </div>
+ 
+    @if (TempData["UserMsg"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["UserMsg"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="text-center py-5 bg-light rounded shadow-sm border">
+            <img src="https://cdn-icons-png.flaticon.com/512/2038/2038854.png" alt="Empty" style="width: 120px; opacity: 0.5;" class="mb-3" />
+            <h4 class="text-secondary">Bạn chưa có đơn hàng nào</h4>
+            <p class="text-muted mb-4">Hãy khám phá các đầu sách hay và đặt hàng ngay!</p>
+            <a href="@Url.Action("Index", "SachOnline")" class="btn btn-primary px-4">Tiếp tục mua sắm</a>
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-hover align-middle bg-white shadow-sm rounded overflow-hidden">
+                <thead class="table-primary text-white">
+                    <tr>
+                        <th class="ps-4">Mã đơn</th>
+                        <th>Ngày đặt</th>
+                        <th>Thanh toán</th>
+                        <th>Trạng thái</th>
+                        <th class="text-end pe-4">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold text-primary font-monospace small">@(item.MaTraCuu ?? ("#" + item.MaDonHang))</div>
+                                @if (!string.IsNullOrEmpty(item.MaTraCuu))
+                                {
+                                    <div class="x-small text-muted mt-1" style="font-size: 0.7rem;">ID: #@item.MaDonHang</div>
+                                }
+                            </td>
+                            <td>@(item.NgayDat.HasValue ? item.NgayDat.Value.ToString("dd/MM/yyyy HH:mm") : "N/A")</td>
+                            <td>
+                                @if (item.DaThanhToan == true)
+                                {
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2">
+                                        <i class="bi bi-check-circle me-1"></i>Đã trả tiền
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-2">
+                                        Chưa trả tiền
+                                    </span>
+                                }
+                                <div class="small text-muted mt-1">
+                                    @(item.PhuongThucThanhToan ?? "Tiền mặt")
+                                </div>
+                            </td>
+                            <td>
+                                @switch (item.TinhTrangGiaoHang)
+                                {
+                                    case 0:
+                                        <span class="badge bg-primary px-3 py-2 rounded-pill"><i class="bi bi-plus-circle me-1"></i>Mới đặt</span>
+                                        break;
+                                    case 1:
+                                        <span class="badge bg-info text-dark px-3 py-2 rounded-pill"><i class="bi bi-clock-history me-1"></i>Chờ xác thực</span>
+                                        break;
+                                    case 2:
+                                        <span class="badge bg-warning text-dark px-3 py-2 rounded-pill"><i class="bi bi-box-seam me-1"></i>Đang xử lý</span>
+                                        break;
+                                    case 3:
+                                        <span class="badge bg-success px-3 py-2 rounded-pill"><i class="bi bi-truck me-1"></i>Đã giao hàng</span>
+                                        break;
+                                    case 4:
+                                        <span class="badge bg-danger px-3 py-2 rounded-pill"><i class="bi bi-x-circle me-1"></i>Đã hủy</span>
+                                        break;
+                                    default:
+                                        <span class="badge bg-secondary">Khác</span>
+                                        break;
+                                }
+                            </td>
+                            <td class="text-end pe-4">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a href="@Url.Action("XacNhanDonHang", "GioHang", new { id = item.MaDonHang })" class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                        <i class="bi bi-eye"></i> Xem
+                                    </a>
+                                    @if (item.TinhTrangGiaoHang == 0)
+                                    {
+                                        using (Html.BeginForm("HuyDonHang", "GioHang", new { id = item.MaDonHang }, FormMethod.Post))
+                                        {
+                                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng này?')">
+                                                <i class="bi bi-x-circle"></i> Hủy
+                                            </button>
+                                        }
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>
+
+<style>
+    .bg-success-subtle { background-color: #d1e7dd; }
+    .bg-secondary-subtle { background-color: #e2e3e5; }
+    .text-success { color: #0f5132; }
+    .text-secondary { color: #41464b; }
+    .table-primary { background-color: #146ef5 !important; }
+</style>

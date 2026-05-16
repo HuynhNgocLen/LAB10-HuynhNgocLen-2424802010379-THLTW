@@ -29,6 +29,9 @@ namespace SachOnline.Controllers
         [ChildActionOnly]
         public ActionResult NavPartial()
         {
+            var routeData = ControllerContext.ParentActionViewContext?.RouteData ?? RouteData;
+            ViewBag.StoreNavController = routeData.Values["controller"] as string ?? "";
+            ViewBag.StoreNavAction = routeData.Values["action"] as string ?? "";
             return PartialView();
         }
 

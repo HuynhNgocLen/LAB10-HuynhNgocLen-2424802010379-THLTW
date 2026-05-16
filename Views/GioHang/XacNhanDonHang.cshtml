@@ -1,13 +1,174 @@
-﻿@{
+@{
     ViewBag.Title = "Đặt hàng thành công";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
+    var phuongThuc = TempData["PhuongThucTT"] as string ?? "COD";
+    var maDonHang = TempData["MaDonHang"];
+    var maTraCuu = TempData["MaTraCuu"] as string;
+    var tongTien = TempData["TongTien"];
+    var momoError = TempData["MoMoError"] as string;
+    var momoTransId = TempData["MoMoTransId"] as string;
+    bool isMoMo = phuongThuc == "MOMO";
+    bool isMoMoFail = phuongThuc == "MOMO_FAIL";
+    bool isMoMoError = phuongThuc == "MOMO_ERROR";
+    bool isBank = phuongThuc == "BANK";
+
+    // Fallback nếu MaTraCuu bị mất (truy cập trực tiếp)
+    string displayId = string.IsNullOrEmpty(maTraCuu) ? ("#" + maDonHang) : maTraCuu;
 }
 
 <div class="text-center py-5">
-    <div class="mb-4 text-success display-4"><i class="bi bi-check-circle-fill"></i></div>
-    <h1 class="h3 page-heading mb-3">Đơn hàng đã được ghi nhận</h1>
-    <p class="text-secondary col-md-8 mx-auto mb-4">
-        Cảm ơn quý khách. Chúng tôi sẽ liên hệ trong thời gian sớm nhất và giao hàng đúng hẹn.
-    </p>
+    @if (isMoMoFail || isMoMoError)
+    {
+        <text>
+            <div class="mb-4 text-warning display-4"><i class="bi bi-exclamation-triangle-fill"></i></div>
+            <h1 class="h3 page-heading mb-3">Đơn hàng đã tạo — Thanh toán chưa hoàn tất</h1>
+        </text>
+
+        if (maDonHang != null)
+        {
+            <p class="mb-2">
+                <span class="text-secondary">Mã đơn hàng: </span>
+                <strong class="text-primary fs-5" style="word-break: break-all;">@displayId</strong>
+            </p>
+        }
+        @* ... existing logic ... *@
+    }
+    else
+    {
+        <text>
+            <div class="mb-4 text-success display-4"><i class="bi bi-check-circle-fill"></i></div>
+            <h1 class="h3 page-heading mb-3">Đơn hàng đã được ghi nhận</h1>
+        </text>
+
+        if (maDonHang != null)
+        {
+            <p class="mb-3 px-3">
+                <span class="text-secondary d-block small mb-1">Mã tra cứu đơn hàng: </span>
+                <strong class="text-primary font-monospace p-2 bg-light border rounded" style="word-break: break-all; font-size: 1.1rem;">@displayId</strong>
+                <button type="button" class="btn btn-sm btn-link text-decoration-none" onclick="navigator.clipboard.writeText('@displayId')">
+                    <i class="bi bi-clipboard"></i> Sao chép
+                </button>
+            </p>
+        }
+
+        <p class="mb-2">
+            <span class="text-secondary">Phương thức thanh toán: </span>
+            @{
+                if (isMoMo)
+                {
+                    <span class="badge fs-6" style="background:#a50064;">
+                        <img src="https://developers.momo.vn/v3/vi/img/logo.svg" alt="MoMo" style="height:16px;filter:brightness(10);margin-right:4px;">
+                        MoMo — Đã thanh toán
+                    </span>
+                    if (!string.IsNullOrEmpty(momoTransId))
+                    {
+                        <br />
+                        <small class="text-muted">Mã giao dịch MoMo: <strong>@momoTransId</strong></small>
+                    }
+                }
+                else if (isBank)
+                {
+                    <span class="badge bg-info fs-6"><i class="bi bi-clock-history me-1"></i>Chuyển khoản — Đang chờ xác thực</span>
+                }
+                else
+                {
+                    <span class="badge bg-warning text-dark fs-6"><i class="bi bi-cash-stack me-1"></i>Thanh toán khi nhận hàng</span>
+                }
+            }
+        </p>
+
+        if (isBank)
+        {
+            <div class="col-md-9 mx-auto mt-4 p-4 border rounded shadow-sm bg-light text-start">
+                <div class="row align-items-center">
+                    <div class="col-md-4 text-center border-end">
+                        <img src="@Url.Content("~/Images/z7831926351157_81dfd62b8e4eddeca11fed1fccecb440.jpg")" alt="QR MB Bank" style="max-width:160px;" class="rounded shadow-sm" />
+                        <div class="mt-2 small text-muted">Quét mã QR để thanh toán</div>
+                    </div>
+                    <div class="col-md-8 ps-4">
+                        <h6 class="fw-bold mb-3"><i class="bi bi-bank me-2"></i>Thông tin chuyển khoản</h6>
+                        <div class="mb-2 small">Số tiền: <strong class="text-danger fs-5">@string.Format("{0:#,##0}", tongTien) đ</strong></div>
+                        <div class="mb-2 small">Nội dung CK: <strong class="text-primary fs-6">SACHONLINE @(maTraCuu ?? maDonHang.ToString())</strong></div>
+                        <div class="mb-3 small text-muted">Tên TK: <strong>SACHONLINE BOOKSTORE</strong></div>
+                        <div class="alert alert-info py-2 small mb-0">
+                            <i class="bi bi-info-circle me-1"></i> Vui lòng ghi đúng nội dung (Mã tra cứu) để chúng tôi xác thực đơn hàng nhanh nhất.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        <text>
+            <p class="text-secondary col-md-8 mx-auto mb-4 mt-4">
+                Cảm ơn quý khách. Chúng tôi sẽ kiểm tra giao dịch và liên hệ giao hàng sớm nhất.
+            </p>
+        </text>
+    }
+
     <a href="@Url.Action("Index", "SachOnline")" class="btn btn-so-primary btn-lg px-4"><i class="bi bi-house"></i> Về trang chủ</a>
 </div>
+
+@section scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var displayId = '@(displayId)';
+            @if (isMoMo)
+            {
+                <text>
+                Swal.fire({
+                    title: 'Thanh toán MoMo thành công!',
+                    html: '<div style="margin-bottom:12px"><img src="https://developers.momo.vn/v3/vi/img/logo.svg" alt="MoMo" style="height:56px;"></div>' +
+                          'Đơn hàng <strong>' + displayId + '</strong> đã được thanh toán qua MoMo.' +
+                          @if (!string.IsNullOrEmpty(momoTransId))
+                          {
+                              <text>'<br><small class="text-muted">Mã GD: @momoTransId</small>' +</text>
+                          }
+                          '<br>Chúng tôi sẽ xử lý và giao hàng sớm nhất!',
+                    icon: 'success',
+                    confirmButtonText: 'Tuyệt vời!',
+                    confirmButtonColor: '#a50064'
+                });
+                </text>
+            }
+            else if (isMoMoFail || isMoMoError)
+            {
+                <text>
+                Swal.fire({
+                    title: 'Thanh toán chưa hoàn tất',
+                    html: 'Đơn hàng <strong>' + displayId + '</strong> đã được tạo nhưng thanh toán MoMo chưa thành công.<br>' +
+                          '<small class="text-muted">@(momoError ?? "Vui lòng liên hệ hỗ trợ.")</small>',
+                    icon: 'warning',
+                    confirmButtonText: 'Đã hiểu',
+                    confirmButtonColor: '#146ef5'
+                });
+                </text>
+            }
+            else if (isBank)
+            {
+                <text>
+                Swal.fire({
+                    title: 'Đã ghi nhận thanh toán!',
+                    html: '<div style="margin-bottom:8px"><i class="bi bi-clock-history" style="font-size:48px;color:#0dcaf0"></i></div>' +
+                          'Đơn hàng <strong>' + displayId + '</strong> đang chờ xác thực chuyển khoản.',
+                    icon: 'info',
+                    confirmButtonText: 'Đã hiểu',
+                    confirmButtonColor: '#0dcaf0'
+                });
+                </text>
+            }
+            else
+            {
+                <text>
+                Swal.fire({
+                    title: 'Đặt hàng thành công!',
+                    html: 'Đơn hàng <strong>' + displayId + '</strong> đã được ghi nhận.<br>Bạn sẽ thanh toán khi nhận hàng.',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#146ef5'
+                });
+                </text>
+            }
+        });
+    </script>
+}

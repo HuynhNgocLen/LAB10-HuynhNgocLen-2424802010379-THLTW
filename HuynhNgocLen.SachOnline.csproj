@@ -212,6 +212,8 @@
     <Compile Include="Security\Argon2PasswordHasher.cs" />
     <Compile Include="Security\EmailService.cs" />
     <Compile Include="Security\EmailTemplates.cs" />
+    <Compile Include="Security\GioHangService.cs" />
+    <Compile Include="Security\MoMoService.cs" />
     <Compile Include="Security\JwtTokenService.cs" />
     <Compile Include="Security\OtpService.cs" />
     <Compile Include="Global.asax.cs">
@@ -285,6 +287,7 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\sachonline-store.css" />
+    <Content Include="Content\sachonline-admin.css" />
     <Content Include="Images\100X125.gif" />
     <Content Include="Images\130318.jpg" />
     <Content Include="Images\130499.jpg" />
@@ -307,8 +310,9 @@
     <Content Include="Images\KT0009.jpg" />
     <Content Include="Images\len %282%29.jpg" />
     <Content Include="Images\LTWeb2005.jpg" />
-    <Content Include="Images\momo.png" />
-    <Content Include="Images\mvc.jpg" />
+    <Content Include="Images/momo.png" />
+    <Content Include="Images/z7831926351157_81dfd62b8e4eddeca11fed1fccecb440.jpg" />
+    <Content Include="Images/mvc.jpg" />
     <Content Include="Images\Oracle.png" />
     <Content Include="Images\Save.jpg" />
     <Content Include="Images\Slider\01.jpg" />
@@ -423,7 +427,6 @@
     <Content Include="Areas\Admin\Views\Sach\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Sach\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Sach\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\Sach\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\KhachHang\Index.cshtml" />
     <Content Include="Areas\Admin\Views\DonHang\Index.cshtml" />
     <Content Include="Areas\Admin\Views\DonHang\Details.cshtml" />
@@ -435,10 +438,7 @@
     <Content Include="Areas\Admin\Views\ChuDe\Index.cshtml" />
     <Content Include="Areas\Admin\Views\ChuDe\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\NhaXuatBan\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\NhaXuatBan\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\KhachHang\Edit.cshtml" />
-    <Content Include="Areas\Admin\Views\KhachHang\Delete.cshtml" />
-    <Content Include="Areas\Admin\Views\ChuDe\Delete.cshtml" />
     <None Include="packages\jQuery.3.7.0\Content\Scripts\jquery-3.7.0-vsdoc.js" />
     <Content Include="packages\jQuery.3.7.0\Content\Scripts\jquery-3.7.0.js" />
     <Content Include="packages\jQuery.3.7.0\Content\Scripts\jquery-3.7.0.min.js" />

@@ -26,6 +26,8 @@ namespace HuynhNgocLen.SachOnline.Models
         public Nullable<System.DateTime> NgayDat { get; set; }
         public Nullable<System.DateTime> NgayGiao { get; set; }
         public Nullable<int> MaKH { get; set; }
+        public string PhuongThucThanhToan { get; set; }
+        public string MaTraCuu { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<CHITIETDATHANG> CHITIETDATHANGs { get; set; }

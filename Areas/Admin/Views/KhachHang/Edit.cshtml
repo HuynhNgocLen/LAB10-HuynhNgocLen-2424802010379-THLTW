@@ -1,4 +1,4 @@
-﻿@model HuynhNgocLen.SachOnline.Models.KHACHHANG
+@model HuynhNgocLen.SachOnline.Models.KHACHHANG
 @{
     ViewBag.Title = "Sửa Thông Tin Khách Hàng";
     ViewBag.ActiveMenu = "KhachHang";
@@ -31,7 +31,7 @@
         }
 
             .kh-breadcrumb a:hover {
-                color: #6366f1;
+                color: var(--primary-color, #0d6efd);
             }
 
         .kh-breadcrumb span {
@@ -45,14 +45,15 @@
         background: #fff;
         border-radius: 16px;
         border: 1px solid #e2e8f0;
-        box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 20px rgba(99,102,241,0.06);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 20px rgba(13,110,253,0.06);
         overflow: hidden;
     }
 
     /* --- Header --- */
     .kh-card-header {
         padding: 1.5rem 2rem;
-        border-bottom: 1px solid #f1f5f9;
+        background: var(--primary-color, #0d6efd);
+        border-bottom: none;
         display: flex;
         align-items: center;
         gap: 1rem;
@@ -61,7 +62,7 @@
     .kh-header-icon {
         width: 42px;
         height: 42px;
-        background: #eef2ff;
+        background: rgba(255, 255, 255, 0.2);
         border-radius: 10px;
         display: flex;
         align-items: center;
@@ -72,7 +73,7 @@
         .kh-header-icon svg {
             width: 20px;
             height: 20px;
-            stroke: #6366f1;
+            stroke: #ffffff;
             fill: none;
             stroke-width: 2;
             stroke-linecap: round;
@@ -82,13 +83,13 @@
     .kh-header-text h5 {
         font-size: 1rem;
         font-weight: 600;
-        color: #0f172a;
+        color: #ffffff;
         margin: 0 0 0.15rem;
     }
 
     .kh-header-text p {
         font-size: 0.78rem;
-        color: #94a3b8;
+        color: rgba(255, 255, 255, 0.9);
         margin: 0;
     }
 
@@ -169,8 +170,8 @@
         }
 
             .kh-input-wrap input:focus {
-                border-color: #6366f1;
-                box-shadow: 0 0 0 3px rgba(99,102,241,0.1);
+                border-color: var(--primary-color, #0d6efd);
+                box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
             }
 
             .kh-input-wrap input:disabled {
@@ -212,7 +213,7 @@
         align-items: center;
         gap: 0.4rem;
         padding: 0.58rem 1.35rem;
-        background: #6366f1;
+        background: var(--primary-color, #0d6efd);
         color: #fff;
         border: none;
         border-radius: 9px;
@@ -221,12 +222,12 @@
         font-family: 'Inter', sans-serif;
         cursor: pointer;
         transition: background 0.15s, box-shadow 0.15s, transform 0.12s;
-        box-shadow: 0 2px 8px rgba(99,102,241,0.25);
+        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.25);
     }
 
         .kh-btn-primary:hover {
-            background: #4f46e5;
-            box-shadow: 0 4px 14px rgba(99,102,241,0.35);
+            background: #0b5ed7;
+            box-shadow: 0 4px 14px rgba(13, 110, 253, 0.35);
             transform: translateY(-1px);
         }
 

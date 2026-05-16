@@ -1,4 +1,4 @@
-﻿@model HuynhNgocLen.SachOnline.Models.DONDATHANG
+@model HuynhNgocLen.SachOnline.Models.DONDATHANG
 
 @{
     ViewBag.Title = "Cập nhật Đơn hàng";
@@ -32,13 +32,20 @@
                         <div class="mb-4">
                             <label class="form-label fw-bold"><i class="bi bi-truck"></i> Tình trạng giao hàng</label>
                             <select name="TinhTrangGiaoHang" class="form-select form-select-lg">
-                                <option value="0" @(Model.TinhTrangGiaoHang == 0 || Model.TinhTrangGiaoHang == null ? "selected" : "")>
-                                    Chưa giao hàng
-                                </option>
-                                <option value="1" @(Model.TinhTrangGiaoHang == 1 ? "selected" : "")>
-                                    Đã giao hàng thành công
-                                </option>
+                                <option value="0" @(Model.TinhTrangGiaoHang == 0 ? "selected" : "")>Mới đặt / Chờ duyệt</option>
+                                <option value="1" @(Model.TinhTrangGiaoHang == 1 ? "selected" : "")>Chờ xác thực thanh toán (BANK)</option>
+                                <option value="2" @(Model.TinhTrangGiaoHang == 2 ? "selected" : "")>Đang xử lý / Đóng gói</option>
+                                <option value="3" @(Model.TinhTrangGiaoHang == 3 ? "selected" : "")>Đã giao hàng thành công</option>
+                                <option value="4" @(Model.TinhTrangGiaoHang == 4 ? "selected" : "")>Đã hủy đơn</option>
                             </select>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold"><i class="bi bi-wallet2"></i> Trạng thái thanh toán</label>
+                            <div class="form-check form-switch p-3 border rounded bg-light">
+                                @Html.CheckBoxFor(model => model.DaThanhToan, new { @class = "form-check-input ms-0", @id = "DaThanhToan" })
+                                <label class="form-check-label ms-2" for="DaThanhToan">Đã thanh toán / Đã nhận tiền</label>
+                            </div>
                         </div>
 
                         <div class="mb-4">
@@ -66,9 +73,38 @@
 </div>
 
 <style>
+    .breadcrumb a {
+        color: var(--primary-color, #0d6efd);
+    }
+
+    .breadcrumb a:hover {
+        color: #0b5ed7;
+    }
+
+    .card-header.bg-primary {
+        background-color: var(--primary-color, #0d6efd) !important;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color, #0d6efd);
+        border-color: var(--primary-color, #0d6efd);
+    }
+
+    .btn-primary:hover,
+    .btn-primary:focus {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+    }
+
     .card {
         border-radius: 12px;
         overflow: hidden;
+    }
+
+    .form-select:focus,
+    .form-control:focus {
+        border-color: var(--primary-color, #0d6efd);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.2);
     }
 
     .form-select-lg, .form-control-lg {

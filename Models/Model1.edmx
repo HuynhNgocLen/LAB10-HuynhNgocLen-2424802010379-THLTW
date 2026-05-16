@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
   <!-- EF Runtime content -->
   <edmx:Runtime>
@@ -43,6 +43,8 @@
           <Property Name="NgayDat" Type="smalldatetime" />
           <Property Name="NgayGiao" Type="smalldatetime" />
           <Property Name="MaKH" Type="int" />
+          <Property Name="PhuongThucThanhToan" Type="nvarchar" MaxLength="20" />
+          <Property Name="MaTraCuu" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="KHACHHANG">
           <Key>
@@ -269,6 +271,8 @@
           <Property Name="NgayDat" Type="DateTime" Precision="0" />
           <Property Name="NgayGiao" Type="DateTime" Precision="0" />
           <Property Name="MaKH" Type="Int32" />
+          <Property Name="PhuongThucThanhToan" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="MaTraCuu" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="CHITIETDATHANGs" Relationship="Self.FK_CTDH_DDH" FromRole="DONDATHANG" ToRole="CHITIETDATHANG" />
           <NavigationProperty Name="KHACHHANG" Relationship="Self.FK_DDH_KH" FromRole="DONDATHANG" ToRole="KHACHHANG" />
         </EntityType>
@@ -460,8 +464,8 @@
             <End Role="TACGIA" EntitySet="TACGIAs" />
             <End Role="VIETSACH" EntitySet="VIETSACHes" />
           </AssociationSet>
-        </EntityContainer>
-      </Schema>
+          </EntityContainer>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -506,6 +510,8 @@
                 <ScalarProperty Name="NgayDat" ColumnName="NgayDat" />
                 <ScalarProperty Name="NgayGiao" ColumnName="NgayGiao" />
                 <ScalarProperty Name="MaKH" ColumnName="MaKH" />
+                <ScalarProperty Name="PhuongThucThanhToan" ColumnName="PhuongThucThanhToan" />
+                <ScalarProperty Name="MaTraCuu" ColumnName="MaTraCuu" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

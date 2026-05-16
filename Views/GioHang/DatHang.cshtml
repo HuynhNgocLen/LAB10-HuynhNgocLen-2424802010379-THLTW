@@ -1,13 +1,15 @@
-﻿@using HuynhNgocLen.SachOnline.Models
+@using HuynhNgocLen.SachOnline.Models
 @model IEnumerable<GioHang>
 @{
     ViewBag.Title = "Đặt hàng";
     Layout = "~/Views/Shared/_LayoutUser.cshtml";
     KHACHHANG kh = (KHACHHANG)Session["TaiKhoan"];
+    double tongTien = (double)ViewBag.TongTien;
 }
 
 <h1 class="h3 page-heading text-center mb-4">Xác nhận đơn hàng</h1>
 
+<!-- ═══════ BẢNG SẢN PHẨM ═══════ -->
 <div class="card border-0 shadow-sm mb-4">
     <div class="card-header bg-white fw-semibold py-3">Sản phẩm</div>
     <div class="table-responsive">
@@ -39,7 +41,7 @@
                 <tr>
                     <td colspan="6" class="text-end py-3">
                         <span class="me-3">Số lượng: <strong>@ViewBag.TongSoLuong</strong></span>
-                        <span>Tổng tiền: <span class="price-tag fs-5">@string.Format("{0:#,##0}", ViewBag.TongTien) đ</span></span>
+                        <span>Tổng tiền: <span class="price-tag fs-5">@string.Format("{0:#,##0}", tongTien) đ</span></span>
                     </td>
                 </tr>
             </tfoot>
@@ -52,12 +54,16 @@
 
 <div class="row justify-content-center">
     <div class="col-lg-8">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white fw-semibold py-3">Thông tin giao hàng</div>
-            <div class="card-body">
-                @using (Html.BeginForm())
-                {
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger small mb-3" })
+        @using (Html.BeginForm("DatHang", "GioHang", FormMethod.Post, new { id = "formDatHang" }))
+        {
+            @Html.ValidationSummary(true, "", new { @class = "text-danger small mb-3" })
+
+            <!-- ═══════ THÔNG TIN GIAO HÀNG ═══════ -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white fw-semibold py-3">
+                    <i class="bi bi-truck me-2"></i>Thông tin giao hàng
+                </div>
+                <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-4">Họ tên</dt>
                         <dd class="col-sm-8 fw-semibold">@kh.HoTen</dd>
@@ -72,11 +78,421 @@
                             <input type="date" name="NgayGiao" class="form-control" required />
                         </dd>
                     </dl>
-                    <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-so-primary btn-lg px-5"><i class="bi bi-check2-circle"></i> Xác nhận đặt hàng</button>
-                    </div>
-                }
+                </div>
             </div>
-        </div>
+
+            <!-- ═══════ PHƯƠNG THỨC THANH TOÁN ═══════ -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-header bg-white fw-semibold py-3">
+                    <i class="bi bi-credit-card me-2"></i>Phương thức thanh toán
+                </div>
+                <div class="card-body">
+                    <input type="hidden" name="PhuongThucThanhToan" id="hiddenPTTT" value="COD" />
+
+                    <div class="row g-3">
+                        <!-- Thanh toán khi nhận hàng (COD) -->
+                        <div class="col-md-4">
+                            <div class="pttt-option active" id="ptttCOD" data-value="COD" onclick="chonPTTT(this)">
+                                <div class="pttt-radio"><div class="pttt-radio-dot"></div></div>
+                                <div class="pttt-content">
+                                    <div class="pttt-icon"><i class="bi bi-cash-stack"></i></div>
+                                    <div class="pttt-label">Khi nhận hàng</div>
+                                    <div class="pttt-desc">Trả tiền mặt COD</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ví MoMo -->
+                        <div class="col-md-4">
+                            <div class="pttt-option" id="ptttMoMo" data-value="MOMO" onclick="chonPTTT(this)">
+                                <div class="pttt-radio"><div class="pttt-radio-dot"></div></div>
+                                <div class="pttt-content">
+                                    <div class="pttt-icon">
+                                        <img src="https://developers.momo.vn/v3/vi/img/logo.svg" alt="MoMo" style="height:26px;" />
+                                    </div>
+                                    <div class="pttt-label">Ví MoMo</div>
+                                    <div class="pttt-desc">Thanh toán tự động</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chuyển khoản ngân hàng -->
+                        <div class="col-md-4">
+                            <div class="pttt-option" id="ptttBank" data-value="BANK" onclick="chonPTTT(this)">
+                                <div class="pttt-radio"><div class="pttt-radio-dot"></div></div>
+                                <div class="pttt-content">
+                                    <div class="pttt-icon"><i class="bi bi-bank"></i></div>
+                                    <div class="pttt-label">Chuyển khoản</div>
+                                    <div class="pttt-desc">Ngân hàng / QR</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- MoMo info banner -->
+                    <div id="momoInfo" class="momo-info-panel" style="display:none; margin-top:20px;">
+                        <div class="d-flex align-items-center gap-3">
+                            <img src="https://developers.momo.vn/v3/vi/img/logo.svg" alt="MoMo" style="height:40px;" />
+                            <div>
+                                <div class="fw-semibold" style="color:#a50064;">Thanh toán qua ví MoMo</div>
+                                <div class="small text-muted">
+                                    Nhấn <strong>"Xác nhận đặt hàng"</strong> → bạn sẽ được chuyển sang trang thanh toán MoMo.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="momo-amount mt-3">
+                            <span class="small text-muted">Số tiền thanh toán:</span>
+                            <span class="fw-bold fs-5" style="color:#a50064;">@string.Format("{0:#,##0}", tongTien) đ</span>
+                        </div>
+                    </div>
+
+                    <!-- Thông tin chuyển khoản (ẩn mặc định) -->
+                    <div id="bankTransferInfo" class="bank-transfer-panel" style="display:none; margin-top:20px;">
+                        <div class="row align-items-center g-4">
+                            <div class="col-md-3 text-center">
+                                <i class="bi bi-qr-code-scan text-primary" style="font-size: 64px;"></i>
+                            </div>
+                            <div class="col-md-9">
+                                <h6 class="fw-bold mb-2">Thanh toán chuyển khoản qua QR/Ngân hàng</h6>
+                                <p class="text-muted small mb-3">
+                                    Thông tin số tài khoản và <strong>Mã đơn hàng</strong> chính xác sẽ được hiển thị ở bước tiếp theo.
+                                </p>
+                                <div class="alert alert-warning py-2 small mb-0">
+                                    <i class="bi bi-info-circle me-1"></i>
+                                    Vui lòng nhấn <strong>"Xác nhận đặt hàng"</strong> để lấy thông tin chuyển khoản.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════ NÚT ĐẶT HÀNG ═══════ -->
+            <div class="text-center mt-4 mb-4">
+                <button type="submit" class="btn btn-so-primary btn-lg px-5" id="btnDatHang">
+                    <i class="bi bi-check2-circle me-2"></i><span id="btnDatHangText">Xác nhận đặt hàng</span>
+                </button>
+            </div>
+        }
     </div>
 </div>
+
+@section scripts {
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        /* ═══════ PHƯƠNG THỨC THANH TOÁN ═══════ */
+        .pttt-option {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 18px 20px;
+            border: 2px solid var(--wf-border);
+            border-radius: var(--wf-radius-md);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background-color: var(--wf-surface);
+            min-height: 120px;
+        }
+
+        .pttt-option:hover {
+            border-color: var(--wf-blue-400);
+            background-color: rgba(20, 110, 245, 0.02);
+        }
+
+        .pttt-option.active {
+            border-color: var(--wf-blue);
+            background-color: rgba(20, 110, 245, 0.04);
+            box-shadow: 0 0 0 1px var(--wf-blue);
+        }
+
+        .pttt-option[data-value="MOMO"].active {
+            border-color: #a50064;
+            background-color: rgba(165, 0, 100, 0.04);
+            box-shadow: 0 0 0 1px #a50064;
+        }
+
+        .pttt-option[data-value="MOMO"].active .pttt-radio { border-color: #a50064; }
+        .pttt-option[data-value="MOMO"].active .pttt-radio-dot { background-color: #a50064; }
+
+        .pttt-radio {
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--wf-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 2px;
+            transition: border-color 0.2s ease;
+        }
+
+        .pttt-option.active .pttt-radio {
+            border-color: var(--wf-blue);
+        }
+
+        .pttt-radio-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: transparent;
+            transition: background-color 0.2s ease;
+        }
+
+        .pttt-option.active .pttt-radio-dot {
+            background-color: var(--wf-blue);
+        }
+
+        .pttt-content { flex: 1; }
+
+        .pttt-icon {
+            font-size: 22px;
+            color: var(--wf-mid-gray);
+            margin-bottom: 6px;
+            transition: color 0.2s ease;
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+        }
+
+        .pttt-option.active .pttt-icon { color: var(--wf-blue); }
+
+        .pttt-label {
+            font-weight: 600;
+            font-size: 15px;
+            color: var(--wf-text);
+            margin-bottom: 2px;
+        }
+
+        .pttt-desc {
+            font-size: 13px;
+            color: var(--wf-mid-gray);
+        }
+
+        /* ═══════ MOMO INFO PANEL ═══════ */
+        .momo-info-panel {
+            margin-top: 24px;
+            padding: 24px;
+            background: linear-gradient(135deg, #fff0f6 0%, #fafafa 100%);
+            border-radius: var(--wf-radius-md);
+            border: 1px solid rgba(165, 0, 100, 0.15);
+            animation: slideDown 0.35s ease-out;
+        }
+
+        .momo-amount {
+            background: rgba(165, 0, 100, 0.06);
+            border-radius: var(--wf-radius-sm);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ═══════ BANK TRANSFER PANEL ═══════ */
+        .bank-transfer-panel {
+            margin-top: 24px;
+            padding: 28px;
+            background: linear-gradient(135deg, #f0f7ff 0%, #fafafa 100%);
+            border-radius: var(--wf-radius-md);
+            border: 1px solid rgba(20, 110, 245, 0.15);
+            animation: slideDown 0.35s ease-out;
+        }
+
+        @@keyframes slideDown {
+            from { opacity: 0; transform: translateY(-12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .bank-qr-img {
+            max-width: 220px;
+            width: 100%;
+            border-radius: var(--wf-radius-md);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--wf-border);
+        }
+
+        .bank-info-card {
+            background: var(--wf-surface);
+            border-radius: var(--wf-radius-md);
+            padding: 20px;
+            border: 1px solid var(--wf-border);
+        }
+
+        .bank-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .bank-info-row:last-child { border-bottom: none; }
+
+        .bank-info-label {
+            font-size: 13px;
+            color: var(--wf-mid-gray);
+            font-weight: 500;
+            flex-shrink: 0;
+            margin-right: 12px;
+        }
+
+        .bank-info-value {
+            font-size: 14px;
+            color: var(--wf-text);
+            text-align: right;
+            display: flex;
+            align-items: center;
+        }
+
+        .bank-info-value code {
+            background: rgba(20, 110, 245, 0.08);
+            color: var(--wf-blue);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .btn-copy { padding: 2px 8px; font-size: 12px; border-radius: 4px; }
+
+        #btnDaChuyenKhoan {
+            border-radius: var(--wf-radius-sm);
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        #btnDaChuyenKhoan:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 215, 34, 0.3);
+        }
+
+        #btnDaChuyenKhoan.confirmed {
+            background-color: var(--wf-green);
+            border-color: var(--wf-green);
+            pointer-events: none;
+        }
+
+        /* MoMo button style */
+        .btn-momo-style {
+            background: linear-gradient(135deg, #a50064, #d1006c) !important;
+            border: none !important;
+            color: #fff !important;
+        }
+
+        .btn-momo-style:hover {
+            background: linear-gradient(135deg, #8a0054, #b3005c) !important;
+        }
+    </style>
+
+    <script>
+        var daXacNhanCK = false;
+
+        function chonPTTT(el) {
+            document.querySelectorAll('.pttt-option').forEach(function (o) {
+                o.classList.remove('active');
+            });
+            el.classList.add('active');
+
+            var value = el.getAttribute('data-value');
+            document.getElementById('hiddenPTTT').value = value;
+
+            // Toggle panels
+            document.getElementById('bankTransferInfo').style.display = (value === 'BANK') ? 'block' : 'none';
+            document.getElementById('momoInfo').style.display = (value === 'MOMO') ? 'block' : 'none';
+
+            // Update button text & style
+            var btn = document.getElementById('btnDatHang');
+            var btnText = document.getElementById('btnDatHangText');
+            btn.className = 'btn btn-lg px-5';
+
+            if (value === 'MOMO') {
+                btnText.innerHTML = '<img src="https://developers.momo.vn/v3/vi/img/logo.svg" alt="" style="height:20px;margin-right:8px;vertical-align:middle;">Thanh toán MoMo';
+                btn.classList.add('btn-momo-style');
+            } else {
+                btnText.textContent = 'Xác nhận đặt hàng';
+                btn.classList.add('btn-so-primary');
+            }
+
+            // Reset bank confirm
+            if (value !== 'BANK') daXacNhanCK = false;
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(function () {
+                Swal.fire({
+                    toast: true, position: 'top-end', icon: 'success',
+                    title: 'Đã sao chép!', showConfirmButton: false,
+                    timer: 1500, timerProgressBar: true
+                });
+            });
+        }
+
+        function xacNhanChuyenKhoan() {
+            Swal.fire({
+                title: 'Xác nhận chuyển khoản?',
+                html: 'Bạn đã chuyển khoản <strong>@string.Format("{0:#,##0}", tongTien) đ</strong><br>vào tài khoản <strong>Vietcombank</strong>?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '<i class="bi bi-check-lg"></i> Đã chuyển khoản',
+                cancelButtonText: 'Chưa',
+                confirmButtonColor: '#00d722',
+                cancelButtonColor: '#ababab',
+                reverseButtons: true
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    daXacNhanCK = true;
+                    var btn = document.getElementById('btnDaChuyenKhoan');
+                    btn.innerHTML = '<i class="bi bi-check-circle-fill me-2"></i>Đã xác nhận chuyển khoản';
+                    btn.classList.add('confirmed');
+
+                    Swal.fire({
+                        title: 'Chuyển khoản thành công!',
+                        html: 'Cảm ơn bạn đã thanh toán.<br>Nhấn <strong>"Xác nhận đặt hàng"</strong> để hoàn tất.',
+                        icon: 'success',
+                        confirmButtonText: 'Tiếp tục',
+                        confirmButtonColor: '#146ef5',
+                        timer: 5000,
+                        timerProgressBar: true
+                    });
+                }
+            });
+        }
+
+        document.getElementById('formDatHang').addEventListener('submit', function (e) {
+            var pttt = document.getElementById('hiddenPTTT').value;
+
+            // MoMo → submit thẳng (redirect sang MoMo)
+            if (pttt === 'MOMO') {
+                // Cho submit, server sẽ redirect
+                return;
+            }
+
+            // COD / Bank đã xác nhận → xác nhận lần cuối
+            e.preventDefault();
+            var ptttText = pttt === 'BANK' ? 'Chuyển khoản ngân hàng' : 'Thanh toán khi nhận hàng (COD)';
+            Swal.fire({
+                title: 'Xác nhận đặt hàng?',
+                html: 'Tổng tiền: <strong style="color:#146ef5">@string.Format("{0:#,##0}", tongTien) đ</strong><br>' +
+                      'Phương thức: <strong>' + ptttText + '</strong>',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '<i class="bi bi-cart-check"></i> Đặt hàng',
+                cancelButtonText: 'Hủy',
+                confirmButtonColor: '#146ef5',
+                cancelButtonColor: '#ababab',
+                reverseButtons: true
+            }).then(function (result) {
+                if (result.isConfirmed) {
+                    // Tạm gỡ listener rồi submit
+                    var form = document.getElementById('formDatHang');
+                    var clone = form.cloneNode(true);
+                    form.parentNode.replaceChild(clone, form);
+                    clone.submit();
+                }
+            });
+        });
+    </script>
+}

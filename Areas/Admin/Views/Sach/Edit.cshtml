@@ -1,4 +1,4 @@
-﻿@model HuynhNgocLen.SachOnline.Models.SACH
+@model HuynhNgocLen.SachOnline.Models.SACH
 @{
     ViewBag.Title = "Chỉnh sửa sách";
     ViewBag.ActiveMenu = "Sach";    
@@ -8,9 +8,9 @@
 <div class="container-fluid py-4">
     <div class="row justify-content-center">
         <div class="col-lg-8">
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white border-0 py-3">
-                    <h4 class="mb-0 text-dark fw-semibold">Điều chỉnh thông tin sách</h4>
+            <div class="card shadow-sm border-0 sach-edit-card">
+                <div class="card-header bg-primary text-white border-0 py-3">
+                    <h4 class="mb-0 fw-semibold">Điều chỉnh thông tin sách</h4>
                 </div>
                 <div class="card-body">
                     @using (Html.BeginForm("Edit", "Sach", FormMethod.Post, new { enctype = "multipart/form-data" }))
@@ -70,6 +70,34 @@
         </div>
     </div>
 </div>
+
+<style>
+    .sach-edit-card {
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .sach-edit-card .card-header.bg-primary {
+        background-color: var(--primary-color, #0d6efd) !important;
+    }
+
+    .sach-edit-card .btn-primary {
+        background-color: var(--primary-color, #0d6efd);
+        border-color: var(--primary-color, #0d6efd);
+    }
+
+    .sach-edit-card .btn-primary:hover,
+    .sach-edit-card .btn-primary:focus {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+    }
+
+    .sach-edit-card .form-control:focus,
+    .sach-edit-card .form-select:focus {
+        border-color: var(--primary-color, #0d6efd);
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.2);
+    }
+</style>
 
 @section Scripts {
     <script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>

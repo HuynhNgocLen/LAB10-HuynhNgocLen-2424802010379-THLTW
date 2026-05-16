@@ -6,13 +6,13 @@
         @foreach (var sach in Model)
         {
             <div class="col-6 col-md-4 col-lg-2">
-                <div class="card h-100 book-card border-0 shadow-sm text-center">
+                <div class="card h-100 book-card border-0 text-center">
                     <a href="@Url.Action("ChiTietSach", "SachOnline", new { id = sach.MaSach })" class="book-card-img-wrap" style="aspect-ratio: 3/4; max-height: 200px;">
                         <img src="@Url.Content("~/Images/" + sach.AnhBia)" alt="@sach.TenSach" />
                     </a>
                     <div class="card-body p-2">
                         <a href="@Url.Action("ChiTietSach", "SachOnline", new { id = sach.MaSach })" class="small text-decoration-none text-body fw-semibold d-block text-truncate" title="@sach.TenSach">@sach.TenSach</a>
-                        <span class="badge bg-secondary bg-opacity-25 text-dark mt-2">Đã bán: @(sach.SoLuongBan ?? 0)</span>
+                        <span class="badge so-badge-muted mt-2">Đã bán: @(sach.SoLuongBan ?? 0)</span>
                     </div>
                 </div>
             </div>

@@ -1,15 +1,15 @@
-﻿@{
+@{
     Layout = null;
 }
 <footer class="store-footer py-5 mt-auto">
     <div class="container">
         <div class="row g-4">
             <div class="col-md-4">
-                <h3 class="h6 text-white fw-bold mb-3"><i class="bi bi-book-half me-2"></i>SachOnline</h3>
-                <p class="small mb-0 opacity-75">Cửa hàng sách trực tuyến — chọn lọc tựa sách chất lượng, giao hàng thuận tiện.</p>
+                <h3 class="store-footer-title mb-3"><i class="bi bi-book-half me-2"></i>SachOnline</h3>
+                <p class="small mb-0 opacity-footnote">Cửa hàng sách trực tuyến — chọn lọc tựa sách chất lượng, giao hàng thuận tiện.</p>
             </div>
             <div class="col-md-4">
-                <h3 class="h6 text-white fw-bold mb-3">Liên kết</h3>
+                <h3 class="store-footer-title mb-3">Liên kết</h3>
                 <ul class="list-unstyled small mb-0">
                     <li class="mb-2"><a href="@Url.Action("Index", "SachOnline")">Trang chủ</a></li>
                     <li class="mb-2"><a href="@Url.Action("GioiThieu", "SachOnline")">Giới thiệu</a></li>
@@ -18,13 +18,13 @@
                 </ul>
             </div>
             <div class="col-md-4">
-                <h3 class="h6 text-white fw-bold mb-3">Hỗ trợ</h3>
+                <h3 class="store-footer-title mb-3">Hỗ trợ</h3>
                 <p class="small mb-1"><i class="bi bi-envelope me-2"></i>hotro@sachonline.local</p>
                 <p class="small mb-1"><i class="bi bi-telephone me-2"></i>028 0000 0000</p>
-                <p class="small mb-0 opacity-75">Giờ làm việc: 8:00 – 17:00 (T2 – T6)</p>
+                <p class="small mb-0 opacity-footnote">Giờ làm việc: 8:00 – 17:00 (T2 – T6)</p>
             </div>
         </div>
-        <hr class="border-secondary my-4 opacity-25" />
-        <p class="small text-center mb-0 opacity-50">© @DateTime.Now.Year SachOnline — Bài tập lập trình Web.</p>
+        <hr class="my-4" />
+        <p class="small text-center mb-0 opacity-footnote">© @DateTime.Now.Year SachOnline — Bài tập lập trình Web.</p>
     </div>
 </footer>

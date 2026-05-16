@@ -1,0 +1,216 @@
+/* SachOnline Admin — cùng DESIGN.md (Webflow-inspired) */
+
+:root {
+    --wf-text: #080808;
+    --wf-blue: #146ef5;
+    --wf-blue-hover: #0055d4;
+    --wf-red: #ee1d36;
+    --wf-gray-800: #222222;
+    --wf-mid-gray: #5a5a5a;
+    --wf-border: #d8d8d8;
+    --wf-surface: #ffffff;
+    --wf-surface-muted: #fafafa;
+    --wf-blue-tint-10: rgba(20, 110, 245, 0.1);
+    --wf-shadow: rgba(0, 0, 0, 0) 0px 84px 24px, rgba(0, 0, 0, 0.01) 0px 54px 22px,
+        rgba(0, 0, 0, 0.04) 0px 30px 18px, rgba(0, 0, 0, 0.08) 0px 13px 13px, rgba(0, 0, 0, 0.09) 0px 3px 7px;
+    --wf-radius-sm: 4px;
+    --wf-radius-md: 8px;
+}
+
+body.admin-wf {
+    font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    letter-spacing: -0.16px;
+    background-color: var(--wf-surface-muted);
+    color: var(--wf-text);
+    -webkit-font-smoothing: antialiased;
+}
+
+.admin-wf .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 260px;
+    background-color: var(--wf-surface);
+    border-right: 1px solid var(--wf-border);
+    box-shadow: var(--wf-shadow);
+    z-index: 1000;
+    overflow-y: auto;
+}
+
+.admin-wf .sidebar .border-bottom {
+    border-color: var(--wf-border) !important;
+}
+
+.admin-wf .sidebar .navbar-brand {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--wf-blue) !important;
+}
+
+.admin-wf .sidebar .text-muted {
+    color: var(--wf-mid-gray) !important;
+    font-size: 13px;
+}
+
+.admin-wf .sidebar .nav-link {
+    color: var(--wf-gray-800);
+    padding: 12px 20px;
+    border-radius: var(--wf-radius-sm);
+    margin: 4px 12px;
+    font-weight: 500;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.admin-wf .sidebar .nav-link:hover {
+    background-color: var(--wf-blue-tint-10);
+    color: var(--wf-blue);
+}
+
+.admin-wf .sidebar .nav-link.active {
+    background-color: var(--wf-blue-tint-10);
+    color: var(--wf-blue);
+}
+
+.admin-wf .sidebar .border-top {
+    border-color: var(--wf-border) !important;
+}
+
+.admin-wf .sidebar .btn-outline-danger {
+    border-color: var(--wf-border);
+    color: var(--wf-red);
+    border-radius: var(--wf-radius-sm);
+    font-weight: 500;
+}
+
+.admin-wf .sidebar .btn-outline-danger:hover {
+    background-color: rgba(238, 29, 54, 0.08);
+    border-color: var(--wf-red);
+    color: var(--wf-red);
+}
+
+.admin-wf .main-content {
+    margin-left: 260px;
+    min-height: 100vh;
+    padding: 24px;
+}
+
+.admin-wf .navbar.fixed-top,
+.admin-wf .admin-topbar {
+    margin-left: 260px;
+    z-index: 1020;
+}
+
+.admin-wf .navbar.fixed-top {
+    background-color: var(--wf-surface) !important;
+    border-bottom: 1px solid var(--wf-border);
+    box-shadow: none;
+}
+
+.admin-wf .navbar .nav-link {
+    color: var(--wf-text);
+    font-weight: 500;
+}
+
+.admin-wf .navbar .dropdown-menu {
+    border: 1px solid var(--wf-border);
+    border-radius: var(--wf-radius-md);
+    box-shadow: var(--wf-shadow);
+}
+
+.admin-wf .card {
+    border: 1px solid var(--wf-border);
+    border-radius: var(--wf-radius-md);
+    box-shadow: var(--wf-shadow);
+    background-color: var(--wf-surface);
+}
+
+.admin-wf .table {
+    border-color: var(--wf-border);
+}
+
+.admin-wf .table thead th {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: var(--wf-mid-gray);
+    border-color: var(--wf-border);
+    background-color: var(--wf-surface-muted);
+}
+
+.admin-wf .table td {
+    border-color: var(--wf-border);
+    vertical-align: middle;
+}
+
+.admin-wf .btn-primary {
+    background-color: var(--wf-blue);
+    border-color: var(--wf-blue);
+    border-radius: var(--wf-radius-sm);
+    font-weight: 500;
+}
+
+.admin-wf .btn-primary:hover {
+    background-color: var(--wf-blue-hover);
+    border-color: var(--wf-blue-hover);
+}
+
+.admin-wf .btn-outline-secondary {
+    border-color: var(--wf-border);
+    color: var(--wf-text);
+    border-radius: var(--wf-radius-sm);
+}
+
+.admin-wf .btn-outline-secondary:hover {
+    background-color: var(--wf-surface-muted);
+    border-color: #898989;
+    color: var(--wf-text);
+}
+
+.admin-wf .alert-warning {
+    border-radius: var(--wf-radius-md);
+    border: 1px solid var(--wf-border);
+    background-color: #fff9e6;
+    color: var(--wf-text);
+}
+
+.admin-wf .modal-content {
+    border: 1px solid var(--wf-border);
+    border-radius: var(--wf-radius-md);
+    box-shadow: var(--wf-shadow);
+}
+
+.admin-wf .form-control,
+.admin-wf .form-select {
+    border-radius: var(--wf-radius-sm);
+    border: 1px solid var(--wf-border);
+}
+
+.admin-wf .form-control:focus,
+.admin-wf .form-select:focus {
+    border-color: var(--wf-blue);
+    box-shadow: 0 0 0 1px var(--wf-blue);
+}
+
+@media (max-width: 992px) {
+    .admin-wf .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        box-shadow: none;
+        border-right: none;
+        border-bottom: 1px solid var(--wf-border);
+    }
+
+    .admin-wf .main-content {
+        margin-left: 0;
+    }
+
+    .admin-wf .navbar.fixed-top,
+    .admin-wf .admin-topbar {
+        margin-left: 0 !important;
+    }
+}

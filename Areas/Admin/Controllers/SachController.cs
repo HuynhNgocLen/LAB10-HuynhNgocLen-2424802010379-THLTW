@@ -138,16 +138,12 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var sach = db.SACHes.SingleOrDefault(n => n.MaSach == id);
-            if (sach == null)
-            {
-                return HttpNotFound();
-            }
-            return View(sach);
+            return RedirectToAction("Index");
         }
 
         // XÓA SÁCH
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public ActionResult ConfirmDelete(int id)
         {
             var sach = db.SACHes.SingleOrDefault(n => n.MaSach == id);

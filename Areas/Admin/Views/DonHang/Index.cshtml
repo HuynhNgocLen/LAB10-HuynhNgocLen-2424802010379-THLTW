@@ -1,4 +1,4 @@
-﻿@model IEnumerable<HuynhNgocLen.SachOnline.Models.DONDATHANG>
+@model IEnumerable<HuynhNgocLen.SachOnline.Models.DONDATHANG>
 
 @{
     ViewBag.Title = "Quản lý đơn hàng";
@@ -8,8 +8,56 @@
 
 <div class="container-fluid py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-dark">Quản lý đơn hàng</h2>
+        <h2 class="fw-bold text-primary mb-0"><i class="bi bi-cart-check me-2"></i>Quản lý đơn hàng</h2>
+        <div class="btn-group shadow-sm">
+            <a href="@Url.Action("Index", new { filter = "" })" class="btn btn-outline-secondary @(ViewBag.CurrentFilter == "" ? "active" : "")">Tất cả</a>
+            <a href="@Url.Action("Index", new { filter = "today" })" class="btn btn-outline-secondary @(ViewBag.CurrentFilter == "today" ? "active" : "")">Hôm nay</a>
+            <a href="@Url.Action("Index", new { filter = "3days" })" class="btn btn-outline-secondary @(ViewBag.CurrentFilter == "3days" ? "active" : "")">3 ngày</a>
+            <a href="@Url.Action("Index", new { filter = "7days" })" class="btn btn-outline-secondary @(ViewBag.CurrentFilter == "7days" ? "active" : "")">7 ngày</a>
+        </div>
     </div>
+
+    <!-- Filter Panel -->
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body bg-light rounded">
+            @using (Html.BeginForm("Index", "DonHang", FormMethod.Get, new { @class = "row g-3 align-items-end" }))
+            {
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold">Từ ngày</label>
+                    <input type="date" name="fromDate" class="form-control form-control-sm" value="@ViewBag.FromDate" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold">Đến ngày</label>
+                    <input type="date" name="toDate" class="form-control form-control-sm" value="@ViewBag.ToDate" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label small fw-bold">Hình thức thanh toán</label>
+                    <select name="pttt" class="form-select form-select-sm">
+                        <option value="">-- Tất cả --</option>
+                        <option value="COD" @(ViewBag.PTTT == "COD" ? "selected" : "")>Tiền mặt (COD)</option>
+                        <option value="BANK" @(ViewBag.PTTT == "BANK" ? "selected" : "")>Chuyển khoản</option>
+                        <option value="MOMO" @(ViewBag.PTTT == "MOMO" ? "selected" : "")>Ví MoMo</option>
+                    </select>
+                </div>
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
+                        <i class="bi bi-filter"></i> Lọc
+                    </button>
+                    <button type="submit" name="export" value="true" class="btn btn-success btn-sm flex-grow-1" formaction="@Url.Action("ExportExcel")">
+                        <i class="bi bi-file-earmark-excel"></i> Xuất Excel
+                    </button>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (TempData["AdminMsg"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["AdminMsg"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <div class="card border-0 shadow-sm rounded-3">
         <div class="card-body p-0">
@@ -20,6 +68,7 @@
                             <th class="ps-4">Mã đơn</th>
                             <th>Khách hàng</th>
                             <th>Ngày đặt</th>
+                            <th class="text-center">Thanh toán</th>
                             <th class="text-center">Trạng thái</th>
                             <th class="text-end pe-4">Hành động</th>
                         </tr>
@@ -30,27 +79,89 @@
                             <tr>
                                 <td class="ps-4 fw-medium">#@item.MaDonHang</td>
                                 <td>@item.KHACHHANG.HoTen</td>
-                                <td>@item.NgayDat.ToString()</td>
-                                <td class="text-center">
-                                    @if (item.TinhTrangGiaoHang == 1)
+                                                           <td class="text-center">
+                                    @if (item.DaThanhToan == true)
                                     {
-                                        <span class="badge bg-success">Đã giao</span>
+                                        <div class="mb-1"><span class="badge bg-success"><i class="bi bi-check-circle me-1"></i>Đã trả</span></div>
                                     }
                                     else
                                     {
-                                        <span class="badge bg-warning text-dark">Chưa giao</span>
+                                        <div class="mb-1"><span class="badge bg-secondary">Chưa trả</span></div>
+                                    }
+                                    <small class="text-muted d-block">(@(item.PhuongThucThanhToan ?? "Tiền mặt"))</small>
+                                </td>
+                                <td class="text-center">
+                                    @if (item.TinhTrangGiaoHang == 1)
+                                    {
+                                        <span class="badge bg-info text-dark"><i class="bi bi-clock-history me-1"></i>Chờ xác thực</span>
+                                    }
+                                    else if (item.TinhTrangGiaoHang == 0)
+                                    {
+                                        <span class="badge bg-primary">Mới đặt</span>
+                                    }
+                                    else if (item.TinhTrangGiaoHang == 2)
+                                    {
+                                        <span class="badge bg-warning text-dark"><i class="bi bi-gear-fill me-1"></i>Đang xử lý</span>
+                                    }
+                                    else if (item.TinhTrangGiaoHang == 3)
+                                    {
+                                        <span class="badge bg-success"><i class="bi bi-check-all me-1"></i>Đã giao</span>
+                                    }
+                                    else if (item.TinhTrangGiaoHang == 4)
+                                    {
+                                        <span class="badge bg-danger">Đã hủy</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Khác</span>
                                     }
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="btn-group">
-                                        <a href="@Url.Action("Details", "DonHang", new { id = item.MaDonHang })"
-                                           class="btn btn-outline-info btn-sm px-3 rounded-2 me-2">
-                                            <i class="bi bi-eye"></i> Chi tiết
+                                        @if (item.TinhTrangGiaoHang == 1)
+                                        {
+                                            using (Html.BeginForm("XacThucThanhToan", "DonHang", new { id = item.MaDonHang }, FormMethod.Post, new { @class = "d-inline me-1" }))
+                                            {
+                                                <button type="submit" class="btn btn-success btn-sm px-2 rounded-2">
+                                                    <i class="bi bi-shield-check"></i> Xác thực
+                                                </button>
+                                            }
+                                        }
+                                        else if (item.TinhTrangGiaoHang == 0)
+                                        {
+                                            using (Html.BeginForm("DuyetDonHang", "DonHang", new { id = item.MaDonHang }, FormMethod.Post, new { @class = "d-inline me-1" }))
+                                            {
+                                                <button type="submit" class="btn btn-primary btn-sm px-2 rounded-2">
+                                                    <i class="bi bi-clipboard-check"></i> Duyệt
+                                                </button>
+                                            }
+                                        }
+                                        else if (item.TinhTrangGiaoHang == 2)
+                                        {
+                                            using (Html.BeginForm("HoanThanh", "DonHang", new { id = item.MaDonHang }, FormMethod.Post, new { @class = "d-inline me-1" }))
+                                            {
+                                                <button type="submit" class="btn btn-info btn-sm px-2 rounded-2 text-white">
+                                                    <i class="bi bi-truck"></i> Giao xong
+                                                </button>
+                                            }
+                                        }
+
+                                        @if (item.TinhTrangGiaoHang != null && item.TinhTrangGiaoHang < 3)
+                                        {
+                                            using (Html.BeginForm("HuyDon", "DonHang", new { id = item.MaDonHang }, FormMethod.Post, new { @class = "d-inline me-1" }))
+                                            {
+                                                <button type="submit" class="btn btn-danger btn-sm px-2 rounded-2" onclick="return confirm('Bạn có chắc muốn hủy đơn hàng #@item.MaDonHang?')">
+                                                    <i class="bi bi-x-circle"></i> Hủy
+                                                </button>
+                                            }
+                                        }
+                                        
+                                        <a href="@Url.Action("Details", "DonHang", new { id = item.MaDonHang })" class="btn btn-outline-info btn-sm px-3 rounded-2 me-1">
+                                            <i class="bi bi-eye"></i>
                                         </a>
 
-                                        <a href="@Url.Action("Edit", "DonHang", new { id = item.MaDonHang })"
-                                           class="btn btn-outline-primary btn-sm px-3 rounded-2 me-2">
-                                            <i class="bi bi-pencil"></i> Cập nhật
+                                        <a href="@Url.Action("Edit", "DonHang", new { id = item.MaDonHang })" class="btn btn-outline-primary btn-sm px-3 rounded-2">
+                                            <i class="bi bi-pencil"></i>
                                         </a>
                                     </div>
                                 </td>

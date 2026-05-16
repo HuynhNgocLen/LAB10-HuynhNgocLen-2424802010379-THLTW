@@ -1,6 +1,7 @@
 @using System.Web
 @{
     var cartToastMsg = TempData["CartToast"] as string;
+    var omitStoreSidebar = ViewBag.OmitStoreSidebar as bool? == true;
 }
 <!DOCTYPE html>
 <html lang="vi">
@@ -8,6 +9,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewBag.Title - SachOnline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link href="~/Content/PagedList.css" rel="stylesheet" />
@@ -22,16 +26,19 @@
             @Html.Action("SliderPartial", "SachOnline")
 
             <div class="row g-4">
-                <aside class="col-lg-3">
-                    <div class="store-sidebar sticky-lg-top" style="top: 5.5rem;">
-                        @Html.Action("ChuDePartial", "SachOnline")
-                        <div class="mt-3">
-                            @Html.Action("NhaXuatBanPartial", "SachOnline")
+                @if (!omitStoreSidebar)
+                {
+                    <aside class="col-lg-3">
+                        <div class="store-sidebar sticky-lg-top" style="top: 5.5rem;">
+                            @Html.Action("ChuDePartial", "SachOnline")
+                            <div class="mt-3">
+                                @Html.Action("NhaXuatBanPartial", "SachOnline")
+                            </div>
                         </div>
-                    </div>
-                </aside>
+                    </aside>
+                }
 
-                <div class="col-lg-9">
+                <div class="@(omitStoreSidebar ? "col-12" : "col-lg-9")">
                     @RenderBody()
                     <hr class="my-4 opacity-25" />
                     @RenderSection("SachBanNhieu", required: false)
@@ -47,13 +54,13 @@
     </button>
 
     <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1090">
-        <div id="cartToast" class="toast text-bg-dark border-0" role="alert" aria-live="polite" aria-atomic="true">
+        <div id="cartToast" class="toast so-toast border-0" role="alert" aria-live="polite" aria-atomic="true">
             <div class="d-flex">
                 <div class="toast-body">
-                    <i class="bi bi-cart-check text-warning me-2"></i>
+                    <i class="bi bi-cart-check me-2 so-toast-icon"></i>
                     <span id="cartToastMsg">Đã cập nhật giỏ hàng.</span>
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Đóng"></button>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Đóng"></button>
             </div>
         </div>
     </div>
@@ -66,7 +73,7 @@
                 window.addEventListener('scroll', function () {
                     btn.classList.toggle('visible', window.scrollY > 400);
                 });
-                btn.addEventListener('click', function () { window.scrollTo({ top: 0, behavior: 'smooth' }); });
+                btn.addEventListener('click', function () { window.scrollTo(0, 0); });
             }
             @if (!string.IsNullOrEmpty(cartToastMsg))
             {

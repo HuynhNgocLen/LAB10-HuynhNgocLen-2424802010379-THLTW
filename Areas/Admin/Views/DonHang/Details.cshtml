@@ -1,4 +1,4 @@
-﻿@model HuynhNgocLen.SachOnline.Models.DONDATHANG
+@model HuynhNgocLen.SachOnline.Models.DONDATHANG
 @{
     ViewBag.Title = "Chi tiết đơn hàng";
     Layout = "~/Areas/Admin/Views/Shared/_LayoutAdmin.cshtml";
@@ -6,54 +6,181 @@
     // Lấy list chi tiết từ ViewBag ép kiểu lại
     var chiTiet = ViewBag.ChiTiet as IEnumerable<HuynhNgocLen.SachOnline.Models.CHITIETDATHANG>;
     decimal tongTien = 0;
+    if (chiTiet != null) {
+        foreach (var item in chiTiet) {
+            tongTien += (decimal)(item.SoLuong * item.DonGia);
+        }
+    }
 }
 
-<h2 class="text-primary">CHI TIẾT ĐƠN HÀNG #@Model.MaDonHang</h2>
-<hr />
-
-<div class="row mb-4">
-    <div class="col-md-6">
-        <h4><strong>Thông tin khách hàng</strong></h4>
-        <p><strong>Họ tên:</strong> @(Model.KHACHHANG != null ? Model.KHACHHANG.HoTen : "")</p>
-        <p><strong>Điện thoại:</strong> @(Model.KHACHHANG != null ? Model.KHACHHANG.DienThoai : "")</p>
-        <p><strong>Địa chỉ nhận:</strong> @(Model.KHACHHANG != null ? Model.KHACHHANG.DiaChi : "")</p>
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex justify-content-between align-items-center bg-primary text-white">
+        <h5 class="m-0 font-weight-bold">CHI TIẾT ĐƠN HÀNG #@Model.MaDonHang</h5>
+        <span class="badge bg-light text-primary fs-6">
+            @switch (Model.TinhTrangGiaoHang)
+            {
+                case 0: @:Mới đặt
+                break;
+                case 1: @:Chờ xác thực Bank
+                break;
+                case 2: @:Đang xử lý
+                break;
+                case 3: @:Đã giao
+                break;
+                case 4: @:Đã hủy
+                break;
+            }
+        </span>
     </div>
-    <div class="col-md-6">
-        <h4><strong>Thông tin đơn hàng</strong></h4>
-        <p><strong>Ngày đặt:</strong> @(Model.NgayDat.HasValue ? Model.NgayDat.Value.ToString("dd/MM/yyyy") : "")</p>
-        <p><strong>Tình trạng:</strong> @(Model.TinhTrangGiaoHang == 1 ? "Đã giao hàng" : "Chưa giao hàng")</p>
+    <div class="card-body">
+        <!-- Quick Actions -->
+        <div class="mb-4 p-3 bg-light rounded border d-flex gap-2">
+            @if (Model.TinhTrangGiaoHang == 1)
+            {
+                using (Html.BeginForm("XacThucThanhToan", "DonHang", new { id = Model.MaDonHang }, FormMethod.Post))
+                {
+                    <button type="submit" class="btn btn-success"><i class="bi bi-shield-check me-1"></i> Xác thực thanh toán</button>
+                }
+            }
+            else if (Model.TinhTrangGiaoHang == 0)
+            {
+                using (Html.BeginForm("DuyetDonHang", "DonHang", new { id = Model.MaDonHang }, FormMethod.Post))
+                {
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-clipboard-check me-1"></i> Duyệt đơn hàng</button>
+                }
+            }
+            else if (Model.TinhTrangGiaoHang == 2)
+            {
+                using (Html.BeginForm("HoanThanh", "DonHang", new { id = Model.MaDonHang }, FormMethod.Post))
+                {
+                    <button type="submit" class="btn btn-info text-white"><i class="bi bi-truck me-1"></i> Hoàn thành giao hàng</button>
+                }
+            }
+
+            @if (Model.TinhTrangGiaoHang != null && Model.TinhTrangGiaoHang < 3)
+            {
+                using (Html.BeginForm("HuyDon", "DonHang", new { id = Model.MaDonHang }, FormMethod.Post))
+                {
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Hủy đơn hàng này?')"><i class="bi bi-x-circle me-1"></i> Hủy đơn</button>
+                }
+            }
+            
+            <a href="@Url.Action("Edit", "DonHang", new { id = Model.MaDonHang })" class="btn btn-outline-primary ms-auto"><i class="bi bi-pencil me-1"></i> Chỉnh sửa nâng cao</a>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 border-end">
+                <h5 class="text-secondary border-bottom pb-2"><i class="bi bi-person-circle"></i> Thông tin khách hàng</h5>
+                <p class="mb-1"><strong>Họ tên:</strong> @(Model.KHACHHANG != null ? Model.KHACHHANG.HoTen : "N/A")</p>
+                <p class="mb-1"><strong>Mã tra cứu (UUID):</strong> <span class="text-primary font-monospace small">@(Model.MaTraCuu ?? "N/A")</span></p>
+                <p class="mb-1"><strong>Điện thoại:</strong> <span class="text-primary fw-bold">@(Model.KHACHHANG != null ? Model.KHACHHANG.DienThoai : "N/A")</span></p>
+                <p class="mb-1"><strong>Địa chỉ:</strong> @(Model.KHACHHANG != null ? Model.KHACHHANG.DiaChi : "N/A")</p>
+                <p class="mb-1"><strong>Email:</strong> @(Model.KHACHHANG != null ? Model.KHACHHANG.Email : "N/A")</p>
+                <div class="mt-3 p-3 bg-light rounded border">
+                    <h6 class="fw-bold"><i class="bi bi-geo-alt-fill text-danger"></i> ĐỊA CHỈ GIAO HÀNG:</h6>
+                    <p class="mb-0 text-dark">@(Model.KHACHHANG != null ? Model.KHACHHANG.DiaChi : "Chưa có địa chỉ")</p>
+                </div>
+            </div>
+            <div class="col-md-6 ps-4">
+                <h5 class="text-secondary border-bottom pb-2"><i class="bi bi-info-circle"></i> Thông tin thanh toán</h5>
+                <p class="mb-1"><strong>Ngày đặt:</strong> @(Model.NgayDat.HasValue ? Model.NgayDat.Value.ToString("dd/MM/yyyy HH:mm") : "N/A")</p>
+                        <div class="mb-3">
+                            <span class="text-muted d-block small">Hình thức thanh toán:</span>
+                            <span class="fw-bold fs-6">
+                                <i class="bi bi-wallet2 me-1"></i>
+                                @(Model.PhuongThucThanhToan ?? "Chưa rõ")
+                            </span>
+                        </div>
+                <p class="mb-1">
+                    <strong>Trạng thái tiền:</strong> 
+                    @if (Model.DaThanhToan == true)
+                    {
+                        <span class="text-success fw-bold"><i class="bi bi-check-circle-fill"></i> Đã nhận tiền</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger fw-bold"><i class="bi bi-x-circle-fill"></i> Chưa thanh toán</span>
+                    }
+                </p>
+
+                @if (Model.TinhTrangGiaoHang == 1)
+                {
+                    <div class="mt-3 p-3 bg-info bg-opacity-10 border border-info rounded">
+                        <h6 class="fw-bold text-info"><i class="bi bi-shield-check"></i> THÔNG TIN XÁC THỰC CHUYỂN KHOẢN:</h6>
+                        <ul class="mb-0 small">
+                            <li>Số tiền cần khớp: <strong class="text-danger fs-5">@string.Format("{0:#,##0}", tongTien) đ</strong></li>
+                            <li>Nội dung chuyển khoản (dự kiến): <strong class="text-primary">SACHONLINE @Model.MaDonHang</strong></li>
+                            <li>Khách hàng: <strong>@Model.KHACHHANG.HoTen</strong></li>
+                        </ul>
+                        @using (Html.BeginForm("XacThucThanhToan", "DonHang", new { id = Model.MaDonHang }, FormMethod.Post, new { @class = "mt-2" }))
+                        {
+                            <button type="submit" class="btn btn-success btn-sm w-100">Xác nhận đã nhận đủ tiền</button>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <h5 class="text-secondary mb-3"><i class="bi bi-cart-check"></i> Danh sách sản phẩm</h5>
+        <div class="table-responsive">
+            <table class="table table-hover border">
+                <thead class="table-light">
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th class="text-center">Số lượng</th>
+                        <th class="text-end">Đơn giá</th>
+                        <th class="text-end">Thành tiền</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (chiTiet != null)
+                    {
+                        foreach (var item in chiTiet)
+                        {
+                            var thanhTien = item.SoLuong * item.DonGia;
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        @if (item.SACH != null && !string.IsNullOrEmpty(item.SACH.AnhBia))
+                                        {
+                                            <img src="~/Images/@item.SACH.AnhBia" style="width:40px;height:50px;object-fit:cover;" class="me-2 rounded shadow-sm" />
+                                        }
+                                        <span>@(item.SACH != null ? item.SACH.TenSach : "N/A")</span>
+                                    </div>
+                                </td>
+                                <td class="text-center">@item.SoLuong</td>
+                                <td class="text-end">@string.Format("{0:#,##0}", item.DonGia) đ</td>
+                                <td class="text-end fw-bold">@string.Format("{0:#,##0}", thanhTien) đ</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot class="table-light">
+                    <tr>
+                        <td colspan="3" class="text-end fw-bold">TỔNG CỘNG:</td>
+                        <td class="text-end"><h4 class="text-danger fw-bold mb-0">@string.Format("{0:#,##0}", tongTien) đ</h4></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="d-flex justify-content-between mt-4">
+            <a href="@Url.Action("Index", "DonHang")" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Quay lại danh sách
+            </a>
+            <div>
+                @if (Model.TinhTrangGiaoHang != 4 && Model.TinhTrangGiaoHang != 3)
+                {
+                    <a href="@Url.Action("Edit", "DonHang", new { id = Model.MaDonHang })" class="btn btn-warning">
+                        <i class="bi bi-pencil"></i> Cập nhật trạng thái
+                    </a>
+                }
+            </div>
+        </div>
     </div>
 </div>
 
-<h4><strong>Danh sách sản phẩm</strong></h4>
-<table class="table table-bordered">
-    <tr style="background-color:#f8f9fa;">
-        <th>Tên sách</th>
-        <th>Số lượng</th>
-        <th>Đơn giá</th>
-        <th>Thành tiền</th>
-    </tr>
-    @if (chiTiet != null)
-    {
-        foreach (var item in chiTiet)
-        {
-            var thanhTien = item.SoLuong * item.DonGia;
-            tongTien += (decimal)thanhTien;
-            <tr>
-                <td>@(item.SACH != null ? item.SACH.TenSach : "Sách không tồn tại")</td>
-                <td>@item.SoLuong</td>
-                <td>@string.Format("{0:#,##0}", item.DonGia) đ</td>
-                <td>@string.Format("{0:#,##0}", thanhTien) đ</td>
-            </tr>
-        }
-    }
-    <tr>
-        <td colspan="3" class="text-right"><strong>Tổng cộng:</strong></td>
-        <td><strong class="text-danger">@string.Format("{0:#,##0}", tongTien) đ</strong></td>
-    </tr>
-</table>
-
-<p>
-    <a href="@Url.Action("Index", "DonHang")" class="btn btn-default">Quay lại danh sách</a>
-    <a href="@Url.Action("Edit", "DonHang", new { id = Model.MaDonHang })" class="btn btn-warning">Cập nhật đơn hàng</a>
-</p>
+<style>
+    .bg-primary { background-color: #146ef5 !important; }
+    .text-primary { color: #146ef5 !important; }
+</style>

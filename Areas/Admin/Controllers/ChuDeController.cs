@@ -9,6 +9,17 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
     {
         SachOnlineEntities1 db = new SachOnlineEntities1();
 
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            var ad = Session["Admin"] as ADMIN;
+            if (ad == null || ad.Quyen != 1)
+            {
+                TempData["ThongBaoAdmin"] = "Bạn không có quyền truy cập chức năng này!";
+                filterContext.Result = RedirectToAction("Dashboard", "Home");
+            }
+            base.OnActionExecuting(filterContext);
+        }
+
         public ActionResult Index(int? page, string tuKhoa)
         {
             int pageSize = 15;
@@ -71,9 +82,7 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var cd = db.CHUDEs.SingleOrDefault(c => c.MaCD == id);
-            if (cd == null) return HttpNotFound();
-            return View(cd);
+            return RedirectToAction("Index");
         }
 
         [HttpPost, ActionName("Delete")]
@@ -91,8 +100,8 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
             }
             catch
             {
-                ModelState.AddModelError("", "Không thể xóa chủ đề vì đang có dữ liệu liên quan.");
-                return View(cd);
+                TempData["ThongBaoAdmin"] = "Không thể xóa chủ đề vì đang có dữ liệu liên quan.";
+                return RedirectToAction("Index");
             }
         }
     }

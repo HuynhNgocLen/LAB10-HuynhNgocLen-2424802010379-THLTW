@@ -1,10 +1,10 @@
-﻿@model HuynhNgocLen.SachOnline.Models.SACH
+@model HuynhNgocLen.SachOnline.Models.SACH
 @{
     var detailUrl = Url.Action("ChiTietSach", "SachOnline", new { id = Model.MaSach });
     var cartUrl = Url.Action("ThemGioHang", "GioHang", new { ms = Model.MaSach, url = Request.Url != null ? Request.Url.ToString() : "" });
 }
 <div class="col-6 col-md-4 mb-4">
-    <div class="card h-100 book-card border-0 shadow-sm">
+    <div class="card h-100 book-card border-0">
         <a href="@detailUrl" class="book-card-img-wrap">
             <img src="@Url.Content("~/Images/" + Model.AnhBia)" alt="@Model.TenSach" />
         </a>

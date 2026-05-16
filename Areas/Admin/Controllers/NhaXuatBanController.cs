@@ -9,6 +9,17 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
     {
         SachOnlineEntities1 db = new SachOnlineEntities1();
 
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            var ad = Session["Admin"] as ADMIN;
+            if (ad == null || ad.Quyen != 1)
+            {
+                TempData["ThongBaoAdmin"] = "Bạn không có quyền truy cập chức năng này!";
+                filterContext.Result = RedirectToAction("Dashboard", "Home");
+            }
+            base.OnActionExecuting(filterContext);
+        }
+
         // DANH SÁCH NXB (có tìm kiếm + phân trang, mỗi trang 15)
         public ActionResult Index(int? page, string tuKhoa)
         {
@@ -79,9 +90,7 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var nxb = db.NHAXUATBANs.SingleOrDefault(n => n.MaNXB == id);
-            if (nxb == null) return HttpNotFound();
-            return View(nxb);
+            return RedirectToAction("Index");
         }
 
         // XÓA NXB
@@ -100,8 +109,8 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
             }
             catch
             {
-                ModelState.AddModelError("", "Không thể xóa nhà xuất bản vì đang có dữ liệu liên quan.");
-                return View(nxb);
+                TempData["ThongBaoAdmin"] = "Không thể xóa nhà xuất bản vì đang có dữ liệu liên quan.";
+                return RedirectToAction("Index");
             }
         }
     }

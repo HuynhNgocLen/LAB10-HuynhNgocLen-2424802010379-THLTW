@@ -1,4 +1,4 @@
-﻿using HuynhNgocLen.SachOnline.Models;
+using HuynhNgocLen.SachOnline.Models;
 using PagedList;
 using System.Drawing.Printing;
 using System.Linq;
@@ -9,6 +9,17 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
     public class KhachHangController : Controller
     {
         SachOnlineEntities1 db = new SachOnlineEntities1();
+
+        protected override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            var ad = Session["Admin"] as ADMIN;
+            if (ad == null || ad.Quyen != 1)
+            {
+                TempData["ThongBaoAdmin"] = "Bạn không có quyền truy cập chức năng này!";
+                filterContext.Result = RedirectToAction("Dashboard", "Home");
+            }
+            base.OnActionExecuting(filterContext);
+        }
 
         // DANH SÁCH KHÁCH HÀNG
         public ActionResult Index(int? page, string tuKhoa)
@@ -95,13 +106,12 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var kh = db.KHACHHANGs.SingleOrDefault(n => n.MaKH == id);
-            if (kh == null) return HttpNotFound();
-            return View(kh);
+            return RedirectToAction("Index");
         }
 
         // XÓA KHÁCH HÀNG
         [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
         public ActionResult ConfirmDelete(int id)
         {
             var kh = db.KHACHHANGs.SingleOrDefault(n => n.MaKH == id);
@@ -114,8 +124,7 @@ namespace HuynhNgocLen.SachOnline.Areas.Admin.Controllers
                 }
                 catch
                 {
-                    ViewBag.ThongBao = "Không thể xóa khách hàng này vì họ đã có Đơn đặt hàng trong hệ thống!";
-                    return View(kh);
+                    TempData["ThongBaoAdmin"] = "Không thể xóa khách hàng này vì họ đã có Đơn đặt hàng trong hệ thống!";
                 }
             }
             return RedirectToAction("Index");

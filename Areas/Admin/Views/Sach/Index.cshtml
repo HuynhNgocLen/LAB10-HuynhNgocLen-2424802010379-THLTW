@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<HuynhNgocLen.SachOnline.Models.SACH>
+@model PagedList.IPagedList<HuynhNgocLen.SachOnline.Models.SACH>
 @using PagedList.Mvc
 
 @{
@@ -65,10 +65,14 @@
                                            class="btn btn-outline-primary btn-sm px-3 rounded-2 me-2">
                                             <i class="bi bi-pencil"></i> Sửa
                                         </a>
-                                        <a href="@Url.Action("Delete", "Sach", new { id = item.MaSach })"
-                                           class="btn btn-outline-danger btn-sm px-3 rounded-2">
+                                        <button type="button"
+                                                class="btn btn-outline-danger btn-sm px-3 rounded-2"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#adminDeleteModal"
+                                                data-delete-url="@Url.Action("Delete", "Sach", new { area = "Admin", id = item.MaSach })"
+                                                data-item-name="@System.Web.HttpUtility.HtmlAttributeEncode(item.TenSach)">
                                             <i class="bi bi-trash"></i> Xóa
-                                        </a>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>

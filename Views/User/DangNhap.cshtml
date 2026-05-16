@@ -29,7 +29,12 @@
                 </div>
                 <div class="mb-4">
                     <label class="form-label">Mật khẩu</label>
-                    @Html.Password("MatKhau", null, new { @class = "form-control", @placeholder = "Nhập mật khẩu", autocomplete = "current-password", required = "required" })
+                    <div class="input-group">
+                        @Html.Password("MatKhau", null, new { @class = "form-control", @placeholder = "Nhập mật khẩu", autocomplete = "current-password", required = "required", id = "MatKhau" })
+                        <button class="btn btn-outline-secondary" type="button" id="togglePassword" onclick="togglePasswordVisibility()" tabindex="-1">
+                            <i class="bi bi-eye" id="eyeIcon"></i>
+                        </button>
+                    </div>
                     <span class="text-danger small">@ViewData["Err2"]</span>
                 </div>
                 <div class="d-grid gap-2">
@@ -42,3 +47,21 @@
         </div>
     </div>
 </div>
+
+@section Scripts
+{
+    <script>
+        function togglePasswordVisibility() {
+            const input = document.getElementById('MatKhau');
+            const icon = document.getElementById('eyeIcon');
+
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('bi-eye', 'bi-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('bi-eye-slash', 'bi-eye');
+            }
+        }
+    </script>
+}

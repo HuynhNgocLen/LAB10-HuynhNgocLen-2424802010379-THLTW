@@ -1,10 +1,12 @@
 using HuynhNgocLen.SachOnline.Models;
 using HuynhNgocLen.SachOnline.Security;
+using HuynhNgocLen.SachOnline.Services;
 using System;
 using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+
 
 namespace HuynhNgocLen.SachOnline.Controllers
 {
@@ -353,7 +355,21 @@ namespace HuynhNgocLen.SachOnline.Controllers
 
         public ActionResult DangXuat()
         {
+            var kh = Session["TaiKhoan"] as KHACHHANG;
+
+            if (kh != null)
+            {
+                // Lưu giỏ hàng vào DB rồi xóa session giỏ
+                GioHangService.LuuVaXoaSession(Session, kh.MaKH);
+            }
+            else
+            {
+                Session.Remove("GioHang");
+            }
+
             Session["TaiKhoan"] = null;
+
+            // Xóa JWT cookie
             var c = new HttpCookie(JwtTokenService.CookieName, "")
             {
                 Expires = DateTime.UtcNow.AddDays(-1),
@@ -365,9 +381,23 @@ namespace HuynhNgocLen.SachOnline.Controllers
             return RedirectToAction("Index", "SachOnline");
         }
 
+        public ActionResult DonHang()
+        {
+            var kh = Session["TaiKhoan"] as KHACHHANG;
+            if (kh == null)
+            {
+                return RedirectToAction("DangNhap", "User");
+            }
+
+            var listDH = db.DONDATHANGs.Where(d => d.MaKH == kh.MaKH).OrderByDescending(d => d.NgayDat).ToList();
+            return View(listDH);
+        }
+
         private void IssueAuthCookieAndSession(KHACHHANG kh)
         {
             Session["TaiKhoan"] = kh;
+
+            GioHangService.TaiGioHangTuDB(Session, kh.MaKH);
 
             var token = JwtTokenService.CreateToken(kh.MaKH, kh.TaiKhoan, kh.Email);
             var minutes = int.TryParse(ConfigurationManager.AppSettings["JwtExpiryMinutes"], out var m) ? m : 180;

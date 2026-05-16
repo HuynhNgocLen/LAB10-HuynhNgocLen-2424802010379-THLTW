@@ -1,5 +1,15 @@
-@{ Layout = null; }
-<nav class="navbar navbar-expand-lg store-navbar sticky-top py-2 mb-3" style="top: 0; z-index: 1030;">
+@using System
+@{ Layout = null;
+    var navCtrl = (ViewBag.StoreNavController as string ?? "").Trim();
+    var navAct = (ViewBag.StoreNavAction as string ?? "").Trim();
+    bool navHome = navCtrl.Equals("SachOnline", StringComparison.OrdinalIgnoreCase)
+        && navAct.Equals("Index", StringComparison.OrdinalIgnoreCase);
+    bool navAbout = navCtrl.Equals("SachOnline", StringComparison.OrdinalIgnoreCase)
+        && navAct.Equals("GioiThieu", StringComparison.OrdinalIgnoreCase);
+    bool navContact = navCtrl.Equals("SachOnline", StringComparison.OrdinalIgnoreCase)
+        && navAct.Equals("LienHe", StringComparison.OrdinalIgnoreCase);
+}
+<nav class="navbar navbar-expand-lg navbar-light store-navbar sticky-top py-2 mb-3" style="top: 0; z-index: 1030;">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="@Url.Action("Index", "SachOnline")">
             <i class="bi bi-book-half fs-4"></i> SachOnline
@@ -10,13 +20,13 @@
         <div class="collapse navbar-collapse" id="storeNav">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("Index", "SachOnline")">Trang chủ</a>
+                    <a class="nav-link@(navHome ? " active" : "")" href="@Url.Action("Index", "SachOnline")" @if (navHome) { <text>aria-current="page"</text> }>Trang chủ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("GioiThieu", "SachOnline")">Giới thiệu</a>
+                    <a class="nav-link@(navAbout ? " active" : "")" href="@Url.Action("GioiThieu", "SachOnline")" @if (navAbout) { <text>aria-current="page"</text> }>Giới thiệu</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="@Url.Action("LienHe", "SachOnline")">Liên hệ</a>
+                    <a class="nav-link@(navContact ? " active" : "")" href="@Url.Action("LienHe", "SachOnline")" @if (navContact) { <text>aria-current="page"</text> }>Liên hệ</a>
                 </li>
             </ul>
             <form class="d-flex flex-column flex-sm-row gap-2 mb-3 mb-lg-0 me-lg-3" role="search" action="@Url.Action("Search", "SachOnline")" method="get">
